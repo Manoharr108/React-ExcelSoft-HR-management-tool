@@ -2,9 +2,9 @@ import React from 'react';
 
 const EmpAddButton = (props) => {
   async function handleAddEmpbtn() {
-    let name = document.getElementById('employee-name').value;
-    let role = document.getElementById('role').value;
-    let photo = document.getElementById('photo').value;
+    let name = document.getElementById('new-name').value;
+    let role = document.getElementById('new-role').value;
+    let photo = document.getElementById('new-photo').value;
 
     try {
       const response = await fetch(`http://localhost:9000/add`, {
@@ -32,7 +32,7 @@ const EmpAddButton = (props) => {
 
         props.setEmployees([...props.employees, newEmployee]);
 
-        document.getElementById('addEmp').reset();
+        document.getElementById('newform').reset();
       }
     } catch (error) {
       console.log('Something went wrong!! ' + error);
@@ -78,24 +78,24 @@ const EmpAddButton = (props) => {
               ></button>
             </div>
             <div className='modal-body'>
-              <form id='addEmp'>
+              <form id='newform'>
                 <div className='mb-3'>
                   <label htmlFor='employee-name' className='col-form-label'>
                     Name:
                   </label>
-                  <input type='text' className='form-control' id='employee-name' />
+                  <input type='text' className='form-control' id='new-name' />
                 </div>
                 <div className='mb-3'>
                   <label htmlFor='role' className='col-form-label'>
                     Role:
                   </label>
-                  <input type='text' className='form-control' id='role' />
+                  <input type='text' className='form-control' id='new-role' />
                 </div>
                 <div className='mb-3'>
                   <label htmlFor='photo' className='col-form-label'>
                     Image URL:
                   </label>
-                  <input type='text' className='form-control' id='photo' />
+                  <input type='text' className='form-control' id='new-photo' />
                 </div>
               </form>
             </div>

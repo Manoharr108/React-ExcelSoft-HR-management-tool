@@ -63,4 +63,4 @@ const DeleteTab = (props) => {
   )
 }
 
-export default DeleteTab
+export default DeleteTab;

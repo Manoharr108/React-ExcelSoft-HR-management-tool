@@ -9,7 +9,6 @@ function Card({ currcat }) {
     photo:"",
     category:""
   });
-  {console.log(employees)}
  useEffect(() => {
     const fetching = async () => {
       try {

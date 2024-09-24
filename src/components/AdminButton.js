@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 const AdminButton = () => {
   const [categories, setCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState('');
+  let [newCategory, setNewCategory] = useState('');
   const [activeCategory, setActiveCategory] = useState('');
 
   useEffect(() => {
@@ -25,8 +25,16 @@ const AdminButton = () => {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
+    let proceed = true
+    categories.map((i)=>{
+      if(i===newCategory){
+        document.getElementById("category-name").value = '';
+        alert("This category already exits!!")
+        proceed = false
+      }
+    })
     try {
-      if(newCategory){
+      if(newCategory && proceed){
         const response = await fetch('http://localhost:9000/add', {
           method: 'POST',
           headers: {
@@ -38,7 +46,7 @@ const AdminButton = () => {
       if (response.ok) {
         setCategories([...categories, newCategory]); 
         setActiveCategory(newCategory); 
-        setNewCategory(''); 
+        setNewCategory = ""; 
       } else {
         console.log('Something went wrong');
       }
