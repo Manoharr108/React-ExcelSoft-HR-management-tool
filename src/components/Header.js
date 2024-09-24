@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Tab from './Tab';
 import Card from './Card';
-import EmpAddButton from './EmpAddButton'
+// import EmpAddButton from './EmpAddButton'
 import DeleteTab from './DeleteTab';
 
 function Header({ categories, setCategories, activeCategory }) {
@@ -35,7 +35,7 @@ function Header({ categories, setCategories, activeCategory }) {
               ></DeleteTab>
         </div>
       <Card currcat={activetab}></Card>
-      <EmpAddButton curract = {activetab}></EmpAddButton>
+      {/* <EmpAddButton curract = {activetab} setActivetab={setActivetab} ></EmpAddButton> */}
     </>
   );
 }

@@ -3,7 +3,7 @@ const operation = require("../models/emplyoee");
 exports.AddEmplyoee =async(req, res)=>{
     try{
         let newemp = await operation.create(req.body);
-        return res.status(201).json({message:"Successfully added to particular tab!!"});
+        return res.status(201).json(newemp);
     }
     catch(err){
         return res.status(500).json({message:err.message});

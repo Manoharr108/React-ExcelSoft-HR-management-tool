@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
-import CardItem from "./CardItem";  // Import the CardItem component
-
+import CardItem from "./CardItem";  
+import EmpAddButton from "./EmpAddButton";
 function Card({ currcat }) {
-  const [employees, setEmployees] = useState([]);  // State to hold the fetched employees
-
+  const [employees, setEmployees] = useState([]); 
+  const [newEmployee, setNewemployee] = useState({
+    _id:"",
+    name:"",
+    photo:"",
+    category:""
+  });
+  {console.log(employees)}
  useEffect(() => {
     const fetching = async () => {
       try {
@@ -38,12 +44,16 @@ function Card({ currcat }) {
             achievement={employee.achievement}
             image={employee.photo} 
             role={employee.role}
+            value={employee._id}
+            employees = {employees}
+            setEmployees = {setEmployees}
           />
           ))
         ) : (
           <h1>No employees found for this category.</h1>
         )}
       </div>
+      <EmpAddButton currtab ={currcat} employees={employees} setEmployees={setEmployees} setNewemployee={setNewemployee}></EmpAddButton>
     </>
   );
 }

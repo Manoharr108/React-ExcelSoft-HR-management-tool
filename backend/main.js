@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
 
 // Connect to MongoDB
-mongoose.connect(process.env.mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.mongoDB)
     .then(() => {
         console.log("Successfully connected to DB!");
         app.listen(port, () => {
