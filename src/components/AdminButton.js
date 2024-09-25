@@ -88,7 +88,9 @@ const AdminButton = () => {
           setCategories([...categories, newCategory]);
           setActiveCategory(newCategory);
           setNewCategory("");
-          window.location.reload()
+          if(document.getElementById("quarter").value!==activeQuarter){
+            window.location.reload()
+          }
         } else {
           console.log('Something went wrong');
         }
