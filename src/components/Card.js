@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from "react";
 import CardItem from "./CardItem";  
 import EmpAddButton from "./EmpAddButton";
-function Card({ currcat }) {
+function Card({ currcat, activeQuarter }) {
   const [employees, setEmployees] = useState([]); 
   const [newEmployee, setNewemployee] = useState({
     _id:"",
     name:"",
     photo:"",
-    category:""
+    category:"",
+    quater:""
   });
  useEffect(() => {
     const fetching = async () => {
       try {
         const response = await fetch(`http://localhost:9000/emp/${currcat}`);
         const data = await response.json();
-        setEmployees(data); 
 
+        const filteredEmployees = data.filter(emp => emp.quater === activeQuarter);
+
+        setEmployees(filteredEmployees); 
+        // console.log(filteredEmployees)
       } catch (error) {
         console.log("Error fetching employees:", error);
       }
     }
     {currcat && fetching();}
-  }, [currcat]);
+  }, [currcat, activeQuarter]);
   
   return (
     <>
@@ -52,7 +56,8 @@ function Card({ currcat }) {
           <h1>No employees found for this category.</h1>
         )}
       </div>
-      <EmpAddButton currtab ={currcat} employees={employees} setEmployees={setEmployees} setNewemployee={setNewemployee}></EmpAddButton>
+      <EmpAddButton currtab ={currcat} employees={employees} setEmployees={setEmployees} setNewemployee={setNewemployee}
+      activeQuarter={activeQuarter}></EmpAddButton>
     </>
   );
 }

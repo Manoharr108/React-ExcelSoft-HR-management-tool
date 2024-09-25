@@ -17,7 +17,11 @@ const emplyoeeSchema = mongoose.Schema(
         category:{
             type:String,
             require:true
-        }
+        },
+        quater:{
+            type:String,
+            require:true
+        },
     }
 );
 

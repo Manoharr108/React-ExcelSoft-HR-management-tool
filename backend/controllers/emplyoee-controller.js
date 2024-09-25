@@ -49,6 +49,7 @@ exports.Emplyoee = async(req,res)=>{
 };
 
 exports.AllEmployee = async(req,res)=>{
+    // let {qtr} = req.params;
     try {
         let emp = await operation.find({});
         return res.status(200).json({emp})

@@ -5,6 +5,7 @@ const EmpAddButton = (props) => {
     let name = document.getElementById('new-name').value;
     let role = document.getElementById('new-role').value;
     let photo = document.getElementById('new-photo').value;
+    let quater = props.activeQuarter
 
     try {
       const response = await fetch(`http://localhost:9000/add`, {
@@ -17,6 +18,7 @@ const EmpAddButton = (props) => {
           photo: photo,
           role: role,
           category: props.currtab,
+          quater:quater
         }),
       });
 
@@ -28,6 +30,7 @@ const EmpAddButton = (props) => {
           photo: photo,
           role: role,
           category: props.currtab,
+          quater:quater
         };
 
         props.setEmployees([...props.employees, newEmployee]);
@@ -79,6 +82,12 @@ const EmpAddButton = (props) => {
             </div>
             <div className='modal-body'>
               <form id='newform'>
+                <div className='mb-3'>
+                  <label htmlFor='quater' className='col-form-label'>
+                    Quarter:
+                  </label>
+                  <input type='text' className='form-control' value={props.activeQuarter} disabled />
+                </div>
                 <div className='mb-3'>
                   <label htmlFor='employee-name' className='col-form-label'>
                     Name:
