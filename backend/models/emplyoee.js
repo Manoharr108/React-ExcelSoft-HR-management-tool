@@ -25,6 +25,6 @@ const emplyoeeSchema = mongoose.Schema(
     }
 );
 
-const operation = mongoose.model("emplyoee",emplyoeeSchema);
+const operation = mongoose.model("ExcelSoft",emplyoeeSchema,);
 
 module.exports = operation;

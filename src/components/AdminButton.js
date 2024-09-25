@@ -7,7 +7,7 @@ const AdminButton = () => {
   const [categories, setCategories] = useState([]); 
   const [newCategory, setNewCategory] = useState('');
   const [activeCategory, setActiveCategory] = useState(''); 
-
+ 
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -33,8 +33,8 @@ const AdminButton = () => {
     };
     
     fetching();
+    
   }, []);
-
   useEffect(() => {
     const fetchCategoriesByQuarter = async () => {
       if (activeQuarter) {
@@ -82,12 +82,13 @@ const AdminButton = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ category: newCategory, quater: activeQuarter }),
+          body: JSON.stringify({ category: newCategory, quater: document.getElementById("quarter").value }),
         });
         if (response.ok) {
           setCategories([...categories, newCategory]);
           setActiveCategory(newCategory);
           setNewCategory("");
+          window.location.reload()
         } else {
           console.log('Something went wrong');
         }
@@ -135,7 +136,7 @@ const AdminButton = () => {
       </div>
       <div className="modal-body">
         <form id="catadd" onSubmit={handleAddCategory}>
-          
+
           <div className="mb-3">
             <label htmlFor="category-name" className="col-form-label">
               Quarter:
@@ -143,11 +144,11 @@ const AdminButton = () => {
             <input
               type="text"
               className="form-control"
-              id="category-name"
+              id="quarter"
               placeholder="Enter New Category Name"
-              value={activeQuarter}
+              // value={activeQuarter}
               required
-              disabled
+              
             />
           </div>
           <div className="mb-3">

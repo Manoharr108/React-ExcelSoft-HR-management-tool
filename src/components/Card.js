@@ -45,7 +45,7 @@ function Card({ currcat, activeQuarter }) {
             key={index} 
             name={employee.name} 
             achievement={employee.achievement}
-            image={employee.photo} 
+            image={employee.photo ? employee.photo:"https://i.sstatic.net/kOnzy.gif"} 
             role={employee.role}
             value={employee._id}
             employees = {employees}
