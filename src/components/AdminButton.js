@@ -1,16 +1,19 @@
 //add tab btn and quater dropdown
 import React, { useState, useEffect } from 'react';
 import Header from './Header';
+import Loader from './Loader'
 const AdminButton = () => {
   const [quarters, setQuarters] = useState([]); 
   const [activeQuarter, setActiveQuarter] = useState(null); 
   const [categories, setCategories] = useState([]); 
   const [newCategory, setNewCategory] = useState('');
   const [activeCategory, setActiveCategory] = useState(''); 
+  const [loading, SetLoading] = useState(false);
  
   useEffect(() => {
     const fetching = async () => {
       try {
+        SetLoading(true)
         const response = await fetch(`http://localhost:9000/employees`);
         const data = await response.json();
 
@@ -27,6 +30,7 @@ const AdminButton = () => {
         if (uniqueQuarters.length > 0 && !activeQuarter) {
           setActiveQuarter(uniqueQuarters[0]);
         }
+        SetLoading(false)
       } catch (error) {
         console.error('Error fetching employees:', error);
       }
@@ -39,6 +43,7 @@ const AdminButton = () => {
     const fetchCategoriesByQuarter = async () => {
       if (activeQuarter) {
         try {
+          SetLoading(true)
           const response = await fetch(`http://localhost:9000/employees`);
           const data = await response.json();
   
@@ -53,7 +58,7 @@ const AdminButton = () => {
           } else {
             setActiveCategory(''); 
           }
-  
+          SetLoading(false)
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -77,6 +82,7 @@ const AdminButton = () => {
 
     if (newCategory && proceed) {
       try {
+     
         const response = await fetch('http://localhost:9000/add', {
           method: 'POST',
           headers: {
@@ -138,7 +144,6 @@ const AdminButton = () => {
       </div>
       <div className="modal-body">
         <form id="catadd" onSubmit={handleAddCategory}>
-
           <div className="mb-3">
             <label htmlFor="category-name" className="col-form-label">
               Quarter:
@@ -186,9 +191,7 @@ const AdminButton = () => {
     </div>
   </div>
 </div>
-
-
-
+{loading&&<Loader></Loader>}
       {/* Dropdown for quarters */}
       <div className="dropdown" style={{ marginTop: '10px', float: "right" }}>
         <button
@@ -217,9 +220,8 @@ const AdminButton = () => {
           )}
         </ul>
       </div>
-
       {/* Pass categories and activeCategory to Header */}
-      <Header categories={categories} setCategories={setCategories} activeCategory={activeCategory} activeQuarter={activeQuarter}/>
+      <Header categories={categories} setCategories={setCategories} activeCategory={activeCategory} activeQuarter={activeQuarter} SetLoading={SetLoading}/>
     </>
   );
 };

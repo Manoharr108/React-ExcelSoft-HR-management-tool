@@ -3,6 +3,7 @@ import React from 'react'
 const DeleteTab = (props) => {
 
     function handledeletebtn(){
+      props.SetLoading(true)
         try{
             fetch(`http://localhost:9000/tab/${props.value}`,{
                 method:"DELETE",
@@ -17,7 +18,8 @@ const DeleteTab = (props) => {
                     const lastButOneTab = updatedCategories[updatedCategories.length - 1];
                     props.setActivetab(lastButOneTab);  
                   }
-            })
+                })
+                props.SetLoading(false)
         }
         catch(err){
             console.log(err.message)

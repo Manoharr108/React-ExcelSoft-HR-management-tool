@@ -5,7 +5,7 @@ import Card from './Card';
 import DeleteTab from './DeleteTab';
 // import Dropdown from './Dropdown';
 
-function Header({ categories, setCategories, activeCategory , activeQuarter}) {
+function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
   const [activetab, setActivetab] = useState(activeCategory || (categories[0]));
   const handleTabClick = (category) => {
     setActivetab(category);
@@ -20,7 +20,8 @@ function Header({ categories, setCategories, activeCategory , activeQuarter}) {
       <h1 className="container" style={{ textAlign: 'center', marginTop: '3rem' }}>
         Employee Achievements - {activeQuarter}
       </h1>
-      <div className="tabcontainer" style={{display:"flex",gap:"4px"}}>
+      
+      <div className="tabcontainer" style={{display:"flex",gap:"4px", margin:"25px"}}>
 
           <ul className="nav nav-tabs">
                 {categories.map((category, index) => (
@@ -39,7 +40,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter}) {
 
               {/* <Dropdown></Dropdown> */}
         </div>
-      <Card currcat={activetab} activeQuarter={activeQuarter}></Card>
+      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading}></Card>
       {/* <EmpAddButton curract = {activetab} setActivetab={setActivetab} ></EmpAddButton> */}
     </>
   );

@@ -1,6 +1,9 @@
 import React from 'react';
 
 const EmpAddButton = (props) => {
+  function handlefetchbtn(){
+    fetch("")
+  }
   async function handleAddEmpbtn() {
     let name = document.getElementById('new-name').value;
     let role = document.getElementById('new-role').value;
@@ -81,6 +84,15 @@ const EmpAddButton = (props) => {
               ></button>
             </div>
             <div className='modal-body'>
+            {/* kind of acting of form */}
+                <div className='mb-3'>
+                    <label htmlFor='empId' className='col-form-label'>
+                      EMP ID:
+                    </label>
+                    <input type='number' className='form-control' />
+                  </div>
+                  <button className='btn btn-primary' id='fetchBtn' onClick={handlefetchbtn} >Fetch</button>
+            {/* kind of acting of form */}
               <form id='newform'>
                 <div className='mb-3'>
                   <label htmlFor='quater' className='col-form-label'>

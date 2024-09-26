@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CardItem from "./CardItem";  
 import EmpAddButton from "./EmpAddButton";
-function Card({ currcat, activeQuarter }) {
+function Card({ currcat, activeQuarter, SetLoading }) {
   const [employees, setEmployees] = useState([]); 
   const [newEmployee, setNewemployee] = useState({
     _id:"",
@@ -13,6 +13,7 @@ function Card({ currcat, activeQuarter }) {
  useEffect(() => {
     const fetching = async () => {
       try {
+        SetLoading(true)
         const response = await fetch(`http://localhost:9000/emp/${currcat}`);
         const data = await response.json();
 
@@ -20,6 +21,7 @@ function Card({ currcat, activeQuarter }) {
 
         setEmployees(filteredEmployees); 
         // console.log(filteredEmployees)
+        SetLoading(false)
       } catch (error) {
         console.log("Error fetching employees:", error);
       }
@@ -50,6 +52,7 @@ function Card({ currcat, activeQuarter }) {
             value={employee._id}
             employees = {employees}
             setEmployees = {setEmployees}
+            SetLoading={SetLoading}
           />
           ))
         ) : (

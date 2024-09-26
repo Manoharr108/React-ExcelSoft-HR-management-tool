@@ -5,6 +5,7 @@ const CardItem = (props) => {
     let confi= window.confirm("Are you sure!! You want to delete Employee named "+props.name)
     if(confi){
       try {
+        props.SetLoading(true)
         fetch(`http://localhost:9000/delete/${props.value}`,{
           method:"DELETE"
         })
@@ -15,6 +16,7 @@ const CardItem = (props) => {
           }
           props.setEmployees(updatedEmployees);
         })
+        props.SetLoading(false)
       } catch (error) {
         console.log(error)
       }
@@ -22,6 +24,7 @@ const CardItem = (props) => {
     }
 
     async function handleEdit(){
+      props.SetLoading(true)
       let response = await fetch(`http://localhost:9000/employee/${props.value}`)
       let data = await response.json();
       let name = document.getElementById("employee-name")
@@ -32,9 +35,11 @@ const CardItem = (props) => {
       name.value = data.name
       photo.value = data.photo
       role.value = data.role
+      props.SetLoading(false)
     }
 
       async function handleeditsubmit(){
+        props.SetLoading(true)
         let response = await fetch(`http://localhost:9000/employee/${props.value}`)
         let data = await response.json();
         let name = document.getElementById("employee-name").value
@@ -58,6 +63,7 @@ const CardItem = (props) => {
             : employee
         );
         props.setEmployees(updatedEmployees);
+        props.SetLoading(false)
       }
 
   return (
