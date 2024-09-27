@@ -9,7 +9,7 @@ const AdminButton = () => {
   const [newCategory, setNewCategory] = useState('');
   const [activeCategory, setActiveCategory] = useState(''); 
   const [loading, SetLoading] = useState(false);
- 
+
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -59,6 +59,7 @@ const AdminButton = () => {
             setActiveCategory(''); 
           }
           SetLoading(false)
+           document.getElementById("quarter").value = activeQuarter
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -114,10 +115,15 @@ const AdminButton = () => {
   return (
     <>
       <button
-  className="btn btn-warning"
-  style={{ marginTop: '10px' }}
-  data-bs-toggle="modal"
-  data-bs-target="#exampleModal"
+    className="btn btn-warning"
+    style={{ marginTop: '74px',
+      position:"absolute",
+      left:"56.5rem",
+      width:"9rem",
+      height:"2.5rem",
+     }}
+    data-bs-toggle="modal"
+    data-bs-target="#exampleModal"
 >
   Add Tab ➕
 </button>
@@ -133,7 +139,7 @@ const AdminButton = () => {
     <div className="modal-content">
       <div className="modal-header">
         <h1 className="modal-title fs-5" id="exampleModalLabel">
-          Add new category
+          Add new category for - {activeQuarter}
         </h1>
         <button
           type="button"
@@ -155,7 +161,6 @@ const AdminButton = () => {
               placeholder="Enter New Category Name"
               // value={activeQuarter}
               required
-              
             />
           </div>
           <div className="mb-3">
@@ -193,7 +198,11 @@ const AdminButton = () => {
 </div>
 {loading&&<Loader></Loader>}
       {/* Dropdown for quarters */}
-      <div className="dropdown" style={{ marginTop: '10px', float: "right" }}>
+      <div className="dropdown" style={{ 
+        marginTop: '-24px',
+      float: "right",
+      marginRight:"12px"
+      }}>
         <button
           className="btn btn-secondary dropdown-toggle"
           type="button"

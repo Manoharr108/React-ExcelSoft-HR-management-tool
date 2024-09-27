@@ -15,8 +15,9 @@ const CardItem = (props) => {
             updatedEmployees = props.employees.filter(emp=>emp._id!==props.value)
           }
           props.setEmployees(updatedEmployees);
+          props.refreshCategoryCount(props.currtab)
+          props.SetLoading(false)
         })
-        props.SetLoading(false)
       } catch (error) {
         console.log(error)
       }

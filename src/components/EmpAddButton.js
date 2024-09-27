@@ -1,8 +1,16 @@
 import React from 'react';
 
 const EmpAddButton = (props) => {
-  function handlefetchbtn(){
-    fetch("")
+  
+  async function handlefetchbtn(){
+    let empid = document.getElementById("empid").value
+    // http://localhost:9000/empID/0000000002
+    let newemp = await fetch(`http://localhost:9000/empID/${empid}`);
+    let data = await newemp.json();
+    // console.log(data[0])
+    document.getElementById('new-name').value = data[0].name;
+    document.getElementById('new-role').value = data[0].role;
+    document.getElementById('new-photo').value = data[0].photo;
   }
   async function handleAddEmpbtn() {
     let name = document.getElementById('new-name').value;
@@ -37,7 +45,7 @@ const EmpAddButton = (props) => {
         };
 
         props.setEmployees([...props.employees, newEmployee]);
-
+        props.refreshCategoryCount(props.currtab)
         document.getElementById('newform').reset();
       }
     } catch (error) {
@@ -74,7 +82,7 @@ const EmpAddButton = (props) => {
           <div className='modal-content'>
             <div className='modal-header'>
               <h1 className='modal-title fs-5' id='exampleModalLabel'>
-                Add Employee For "{`${props.currtab}`}" Tab
+                Add Employee For "{`${props.currtab}`}" - {props.activeQuarter}
               </h1>
               <button
                 type='button'
@@ -89,12 +97,12 @@ const EmpAddButton = (props) => {
                     <label htmlFor='empId' className='col-form-label'>
                       EMP ID:
                     </label>
-                    <input type='number' className='form-control' />
+                    <input type='number' className='form-control' id='empid'/>
                   </div>
                   <button className='btn btn-primary' id='fetchBtn' onClick={handlefetchbtn} >Fetch</button>
             {/* kind of acting of form */}
               <form id='newform'>
-                <div className='mb-3'>
+                <div className='mb-3' style={{display:"none"}}>
                   <label htmlFor='quater' className='col-form-label'>
                     Quarter:
                   </label>

@@ -9,6 +9,16 @@ exports.AddEmplyoee =async(req, res)=>{
         return res.status(500).json({message:err.message});
     }
 }
+exports.EmplyoeeWithId =async(req, res)=>{
+    let {empid} = req.params;
+    try{
+        let newemp = await operation.find({empid:empid});
+        return res.status(201).json(newemp);
+    }
+    catch(err){
+        return res.status(500).json({message:err.message});
+    }
+}
 
 exports.DeleteEmplyoee = async(req, res)=>{
     let {id} = req.params;
@@ -36,11 +46,40 @@ exports.ModifyEmployee = async (req, res) => {
     return res.status(500).json({message:error.message})
    }
 };
+// exports.ModifyTab = async (req, res) => {
+//    let {tabname} = req.params;
+//    try {
+//     let emp = await operation.findOneAndUpdate({category:tabname, n},
+//         {
+//             name:name,
+//             photo:photo,
+//             role:role
+//         }
+//     )
+//     await emp.save({});
+//     return res.status(200).json({message:"successfully updated user!!"})
+//    } catch (error) {
+//     return res.status(500).json({message:error.message})
+//    }
+// };
 
 exports.Emplyoee = async(req,res)=>{
     let {category} = req.params;
     try{
         let emp = await operation.find({category:category});
+        return res.status(200).json(emp);
+    }
+    catch(err){
+        return res.status(500).json({message:"something went wrong!!"})
+    }
+};
+exports.manageTab = async(req,res)=>{
+    let {category, qtr} = req.params;
+    try{
+        let emp = await operation.find({
+            category:category,
+            quater:qtr
+        });
         return res.status(200).json(emp);
     }
     catch(err){

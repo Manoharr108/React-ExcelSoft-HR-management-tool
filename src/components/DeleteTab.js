@@ -3,8 +3,8 @@ import React from 'react'
 const DeleteTab = (props) => {
 
     function handledeletebtn(){
-      props.SetLoading(true)
         try{
+            // props.SetLoading(true)
             fetch(`http://localhost:9000/tab/${props.value}`,{
                 method:"DELETE",
             })
@@ -19,12 +19,11 @@ const DeleteTab = (props) => {
                     props.setActivetab(lastButOneTab);  
                   }
                 })
-                props.SetLoading(false)
+                // props.SetLoading(false)
         }
         catch(err){
             console.log(err.message)
         }
-        // window.location.reload()
     }
   return (
     <>
@@ -33,7 +32,8 @@ const DeleteTab = (props) => {
       float:"right",
        width:"9rem",
       height:"2.5rem",
-      textAlign:"center"
+      textAlign:"center",
+      marginLeft:"auto"
     }} value={props.value}
    
      data-bs-toggle="modal" data-bs-target="#staticBackdrop"
@@ -50,7 +50,7 @@ const DeleteTab = (props) => {
       </div>
       <div className="modal-body">
        Are you sure! <br></br>
-         All the Employees in this Tab and the entire Tab itself is <b>Deleted.!
+         {`All the Employees in this tab called "${props.activeCategory}"`} <b>Deleted.!
             </b> 
       </div>
       <div className="modal-footer">

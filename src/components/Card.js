@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CardItem from "./CardItem";  
 import EmpAddButton from "./EmpAddButton";
-function Card({ currcat, activeQuarter, SetLoading }) {
+function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
   const [employees, setEmployees] = useState([]); 
   const [newEmployee, setNewemployee] = useState({
     _id:"",
@@ -20,7 +20,6 @@ function Card({ currcat, activeQuarter, SetLoading }) {
         const filteredEmployees = data.filter(emp => emp.quater === activeQuarter);
 
         setEmployees(filteredEmployees); 
-        // console.log(filteredEmployees)
         SetLoading(false)
       } catch (error) {
         console.log("Error fetching employees:", error);
@@ -44,6 +43,7 @@ function Card({ currcat, activeQuarter, SetLoading }) {
           employees.map((employee, index) => (
             employee.name!=null &&
           <CardItem 
+            currtab ={currcat}
             key={index} 
             name={employee.name} 
             achievement={employee.achievement}
@@ -53,6 +53,7 @@ function Card({ currcat, activeQuarter, SetLoading }) {
             employees = {employees}
             setEmployees = {setEmployees}
             SetLoading={SetLoading}
+            refreshCategoryCount={refreshCategoryCount}
           />
           ))
         ) : (
@@ -60,7 +61,7 @@ function Card({ currcat, activeQuarter, SetLoading }) {
         )}
       </div>
       <EmpAddButton currtab ={currcat} employees={employees} setEmployees={setEmployees} setNewemployee={setNewemployee}
-      activeQuarter={activeQuarter}></EmpAddButton>
+      activeQuarter={activeQuarter} refreshCategoryCount={refreshCategoryCount}></EmpAddButton>
     </>
   );
 }
