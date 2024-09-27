@@ -5,7 +5,7 @@ const DeleteTab = (props) => {
     function handledeletebtn(){
         try{
             // props.SetLoading(true)
-            fetch(`http://localhost:9000/tab/${props.value}`,{
+            fetch(`http://localhost:9000/tab/${props.value}/${props.activeQuarter}`,{
                 method:"DELETE",
             })
             .then((response)=>{

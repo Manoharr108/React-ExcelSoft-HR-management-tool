@@ -107,9 +107,12 @@ exports.FindAnEmplyoee = async(req,res)=>{
 }
 
 exports.DeleteTab = async(req,res)=>{
-    let {category} = req.params;
+    let {category, qtr} = req.params;
     try {
-       let emp =  await operation.deleteMany({category:category})
+       let emp =  await operation.deleteMany({
+        category:category,
+        quater:qtr
+    })
            .then((result)=>{
                return res.status(200).json({message:"successfully removed the whole " +category +" tab"})
         })
