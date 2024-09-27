@@ -64,9 +64,12 @@ exports.ModifyEmployee = async (req, res) => {
 // };
 
 exports.Emplyoee = async(req,res)=>{
-    let {category} = req.params;
+    let {category, qtr} = req.params;
     try{
-        let emp = await operation.find({category:category});
+        let emp = await operation.find({
+            category:category,
+            quater:qtr
+        });
         return res.status(200).json(emp);
     }
     catch(err){

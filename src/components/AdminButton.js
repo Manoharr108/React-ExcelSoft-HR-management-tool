@@ -74,7 +74,7 @@ const AdminButton = () => {
     e.preventDefault();
     let proceed = true;
     categories.forEach((i) => {
-      if (i === newCategory) {
+      if (i === newCategory && document.getElementById("quarter").value===activeQuarter) {
         setNewCategory("");
         alert("This category already exists!");
         proceed = false;
@@ -163,21 +163,30 @@ const AdminButton = () => {
               required
             />
           </div>
+
           <div className="mb-3">
             <label htmlFor="category-name" className="col-form-label">
               Category:
             </label>
-            <input
+            {/* <input
               type="text"
               className="form-control"
               id="category-name"
               placeholder="Enter New Category Name"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              required
-            />
+              required/> */}
+
+            <select className="form-select" aria-label="Default select example" id="category-name" value={newCategory}
+            onChange={(e) => setNewCategory(e.target.value)}
+             >
+               <option value="" disabled>Select Category</option> {/* Default option */}
+                <option value="Most valuable Player">Most valuable Player</option>
+                <option value="Extra Miler">Extra Miler</option>
+                <option value="Excelearn">Excelearn</option>
+            </select>
+
           </div>
-      
 
           <div className="modal-footer" style={{ height: '3rem' }}>
             <button

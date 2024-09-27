@@ -17,7 +17,6 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
   async function countfunction(category) {
     let data = await fetch(`http://localhost:9000/tab/${category}/${activeQuarter}`);
     let response = await data.json();
-    console.log(response)
     return response.length - 1;
   }
 

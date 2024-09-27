@@ -1,16 +1,28 @@
-import React from 'react';
-
+import React, { useState } from 'react';
+import Alert from "./Alert";
 const EmpAddButton = (props) => {
+  const [alert, SetAlert] = useState({visible:false, message:""})
   
+  function handleAlert(message){
+    SetAlert({visible:true, message})
+    setTimeout(() => {
+      SetAlert({ visible: false, message: '' });
+    }, 3000); 
+  }
+
   async function handlefetchbtn(){
     let empid = document.getElementById("empid").value
     // http://localhost:9000/empID/0000000002
     let newemp = await fetch(`http://localhost:9000/empID/${empid}`);
     let data = await newemp.json();
-    // console.log(data[0])
-    document.getElementById('new-name').value = data[0].name;
-    document.getElementById('new-role').value = data[0].role;
-    document.getElementById('new-photo').value = data[0].photo;
+    if(data.length>0){
+      document.getElementById('new-name').value = data[0].name;
+      document.getElementById('new-role').value = data[0].role;
+      document.getElementById('new-photo').value = data[0].photo;
+    }
+    else{
+      window.alert("Employee not found!!")
+    }
   }
   async function handleAddEmpbtn() {
     let name = document.getElementById('new-name').value;
@@ -47,6 +59,8 @@ const EmpAddButton = (props) => {
         props.setEmployees([...props.employees, newEmployee]);
         props.refreshCategoryCount(props.currtab)
         document.getElementById('newform').reset();
+        handleAlert("A new employee added!!")
+        document.getElementById("empid").value =""
       }
     } catch (error) {
       console.log('Something went wrong!! ' + error);
@@ -55,6 +69,7 @@ const EmpAddButton = (props) => {
 
   return (
     <>
+      {alert.visible && <Alert  text={alert.message}></Alert>}
       <button
         className='btn btn-success'
         type='button'

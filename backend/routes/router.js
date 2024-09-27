@@ -3,7 +3,7 @@ const router = express();
 const controller = require("../controllers/emplyoee-controller");
 
 router.get("/employees",controller.AllEmployee);
-router.get("/emp/:category",controller.Emplyoee);
+router.get("/emp/:category/:qtr",controller.Emplyoee);
 router.get("/tab/:category/:qtr", controller.manageTab)
 router.get("/empID/:empid",controller.EmplyoeeWithId);
 router.post("/add",controller.AddEmplyoee);

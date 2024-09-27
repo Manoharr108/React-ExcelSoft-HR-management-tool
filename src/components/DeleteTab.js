@@ -3,8 +3,8 @@ import React from 'react'
 const DeleteTab = (props) => {
 
     function handledeletebtn(){
-        try{
-            // props.SetLoading(true)
+      // props.SetLoading(true)
+      try{
             fetch(`http://localhost:9000/tab/${props.value}/${props.activeQuarter}`,{
                 method:"DELETE",
             })
@@ -18,12 +18,15 @@ const DeleteTab = (props) => {
                     const lastButOneTab = updatedCategories[updatedCategories.length - 1];
                     props.setActivetab(lastButOneTab);  
                   }
+                  if(updatedCategories.length === 0){
+                    window.location.reload()
+                  }
                 })
-                // props.SetLoading(false)
-        }
-        catch(err){
-            console.log(err.message)
-        }
+              }
+              catch(err){
+                console.log(err.message)
+              }
+              // props.SetLoading(false)
     }
   return (
     <>
