@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 
 const CardItem = (props) => {
   const [currEmp, setcurrEmp] = useState(props.index)
-  const emparr = props.employees || []
+  const emparr = props.employees;
   const empdetails = emparr[currEmp]
+  console.log(props.employees)
   if(!empdetails){
     return null
   }
-
   function handleNext(){
     if(currEmp<emparr.length-1){
       setcurrEmp(currEmp+1)
@@ -85,7 +85,7 @@ const CardItem = (props) => {
 
   return (
     <>
-      <div className="card" style={{ width: "15rem", marginBottom: "1rem", display: props.visible }} >
+      <div className="card" style={{ width: "15rem", marginBottom: "1rem" }} >
         <img src={props.image} className="card-img-top" alt="Card image" data-bs-toggle="modal" data-bs-target={`#imageModal-${props.value}`} />
         <div className="card-body">
           <h5 className="card-title">{props.name}</h5>
@@ -103,17 +103,17 @@ const CardItem = (props) => {
       </div>
 
         {/* modal view */}
-      <div class="modal fade modal-lg" id={`imageModal-${props.value}`} tabindex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
+      <div className="modal fade modal-lg" id={`imageModal-${props.value}`} tabIndex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
               <div className="header" style={{ display: "flex", flexDirection: "column" }}>
               <h6 >{currEmp+1}/{props.employees.length}</h6>
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{empdetails.name} - Achiever of "{props.currtab}" in Quarter {props.activeQuarter}</h1>
+                <h1 className="modal-title fs-5" id="exampleModalLabel">{empdetails.name} - Achiever of "{props.currtab}" in Quarter {props.activeQuarter}</h1>
               </div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <div className="modalcontaier" style={{ display: "flex", gap: "10px" }}>
                 <img src={empdetails.photo} alt="image" className="img-fluid" style={{ height: "250px", width: "250px", borderRadius: "50%" }} />
                 <p style={{ minWidth: "66%", background: "#e2dede", padding: "10px", fontSize: "18px" }}>{empdetails.remarks || "Manoj took charge of code reviews and ensured quality code delivery."}</p>
@@ -132,17 +132,17 @@ const CardItem = (props) => {
           </div>
         </div>
       </div>
-      {/* <div class="modal fade modal-lg" id={`imageModal-${props.value}`} tabindex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
+      {/* <div className="modal fade modal-lg" id={`imageModal-${props.value}`} tabIndex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
               <div className="header" style={{ display: "flex", flexDirection: "column" }}>
               <h6 >{props.index+1}/{props.employees.length}</h6>
-                <h1 class="modal-title fs-5" id="exampleModalLabel">{props.name} - Achiever of "{props.currtab}" in Quarter {props.activeQuarter}</h1>
+                <h1 className="modal-title fs-5" id="exampleModalLabel">{props.name} - Achiever of "{props.currtab}" in Quarter {props.activeQuarter}</h1>
               </div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div className="modal-body">
               <div className="modalcontaier" style={{ display: "flex", gap: "10px" }}>
                 <img src={props.image} alt="image" className="img-fluid" style={{ height: "250px", width: "250px", borderRadius: "50%" }} />
                 <p style={{ minWidth: "66%", background: "#e2dede", padding: "10px", fontSize: "18px" }}>{props.remarks || "Manoj took charge of code reviews and ensured quality code delivery."}</p>

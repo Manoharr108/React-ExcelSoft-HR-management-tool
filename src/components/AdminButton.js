@@ -26,6 +26,20 @@ const AdminButton = () => {
         });
         
         setQuarters(uniqueQuarters); 
+
+        const filteredEmployees = data.emp.filter(emp => emp.quater === activeQuarter);
+  
+          const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
+  
+          setCategories(uniqueCategories);
+  
+          if (uniqueCategories.length > 0) {
+            setActiveCategory(uniqueCategories[0]);
+          } else {
+            setActiveCategory(''); 
+          }
+          document.getElementById("quarter").value = activeQuarter;
+        
         // Set default active quarter on first render
         if (uniqueQuarters.length > 0 && !activeQuarter) {
           setActiveQuarter(uniqueQuarters[0]);
@@ -38,36 +52,37 @@ const AdminButton = () => {
     
     fetching();
     
-  }, []);
-  useEffect(() => {
-    const fetchCategoriesByQuarter = async () => {
-      if (activeQuarter) {
-        try {
-          SetLoading(true)
-          const response = await fetch(`http://localhost:9000/employees`);
-          const data = await response.json();
-  
-          const filteredEmployees = data.emp.filter(emp => emp.quater === activeQuarter);
-  
-          const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
-  
-          setCategories(uniqueCategories);
-  
-          if (uniqueCategories.length > 0) {
-            setActiveCategory(uniqueCategories[0]);
-          } else {
-            setActiveCategory(''); 
-          }
-          SetLoading(false)
-           document.getElementById("quarter").value = activeQuarter
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      }
-    };
-  
-    fetchCategoriesByQuarter();
   }, [activeQuarter]);
+  
+  // useEffect(() => {
+  //   const fetchCategoriesByQuarter = async () => {
+  //     if (activeQuarter) {
+  //       try {
+  //         SetLoading(true)
+  //         const response = await fetch(`http://localhost:9000/employees`);
+  //         const data = await response.json();
+  
+  //         const filteredEmployees = data.emp.filter(emp => emp.quater === activeQuarter);
+  
+  //         const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
+  
+  //         setCategories(uniqueCategories);
+  
+  //         if (uniqueCategories.length > 0) {
+  //           setActiveCategory(uniqueCategories[0]);
+  //         } else {
+  //           setActiveCategory(''); 
+  //         }
+  //         document.getElementById("quarter").value = activeQuarter;
+  //         SetLoading(false);
+  //       } catch (error) {
+  //         console.error('Error fetching data:', error);
+  //       }
+  //     }
+  //   };
+  
+  //   fetchCategoriesByQuarter();
+  // }, [activeQuarter]);
   
 
   const handleAddCategory = async (e) => {
@@ -184,6 +199,7 @@ const AdminButton = () => {
                 <option value="Most valuable Player">Most valuable Player</option>
                 <option value="Extra Miler">Extra Miler</option>
                 <option value="Excelearn">Excelearn</option>
+                <option value="Pat on the back">Pat on the back</option>
             </select>
 
           </div>
