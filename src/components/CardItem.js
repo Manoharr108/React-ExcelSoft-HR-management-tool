@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const CardItem = (props) => {
   const [currEmp, setcurrEmp] = useState(props.index)
   const emparr = props.employees;
   const empdetails = emparr[currEmp]
-  console.log(props.employees)
-  if(!empdetails){
-    return null
-  }
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.key;
+      switch (key) {
+        case 'ArrowLeft':
+          if (currEmp > 0) {
+            setcurrEmp((prev) => prev - 1);
+          }
+          break;
+        case 'ArrowRight':
+          if (currEmp < emparr.length - 1) {
+            setcurrEmp((prev) => prev + 1);
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [currEmp, emparr.length]);
+
+
+      if(!empdetails){
+        return null
+      }
   function handleNext(){
     if(currEmp<emparr.length-1){
       setcurrEmp(currEmp+1)
