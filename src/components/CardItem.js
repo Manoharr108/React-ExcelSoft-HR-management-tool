@@ -129,7 +129,7 @@ const CardItem = (props) => {
       </div>
 
         {/* modal view */}
-      <div className="modal fade modal-lg" id={`imageModal-${props.value}`} tabIndex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
+      <div className="modal fade modal-xl" id={`imageModal-${props.value}`} tabIndex="-1" aria-labelledby="modalwithinfo" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
@@ -142,7 +142,7 @@ const CardItem = (props) => {
             <div className="modal-body">
               <div className="modalcontaier" style={{ display: "flex", gap: "10px" }}>
                 <img src={empdetails.photo} alt="image" className="img-fluid" style={{ height: "250px", width: "250px", borderRadius: "50%" }} />
-                <p style={{ minWidth: "66%", background: "#e2dede", padding: "10px", fontSize: "18px" }}>{empdetails.remarks || "Manoj took charge of code reviews and ensured quality code delivery."}</p>
+                <p style={{ minWidth: "76%", background: "#e2dede", padding: "10px", fontSize: "18px" }}>{empdetails.remarks || "Manoj took charge of code reviews and ensured quality code delivery."}</p>
                 <div className="arrow" style={{
                   display:"flex",
                   zIndex:1,
