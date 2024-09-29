@@ -6,14 +6,16 @@ const router = require("./routes/router");
 require("dotenv").config();
 
 const port = process.env.PORT || 9000; 
-const corsOptions = {
-    origin: 'http://localhost:3000', 
-    optionsSuccessStatus: 200  
-};
 
-app.use(cors(corsOptions)); 
+// const corsOptions = {
+//     origin: 'http://localhost:3000', 
+//     optionsSuccessStatus: 200  
+// };
+app.use(cors());
+// app.use(cors(corsOptions)); 
 
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", router);

@@ -21,7 +21,6 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         const filteredEmployees = await data.filter(emp => emp.quater === activeQuarter && emp.name && emp.name.trim() !== "" );
 
         setEmployees(filteredEmployees); 
-        console.log(employees)
         SetLoading(false)
       } catch (error) {
         console.log("Error fetching employees:", error);
