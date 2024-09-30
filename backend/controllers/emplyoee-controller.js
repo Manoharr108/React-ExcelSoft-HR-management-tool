@@ -23,6 +23,7 @@ exports.EmplyoeeWithId =async(req, res)=>{
 exports.DeleteEmplyoee = async(req, res)=>{
     let {id} = req.params;
     try {
+        // let emp = await operation.deleteMany({_id:id});
         let emp = await operation.findOneAndDelete({_id:id});
         return res.status(200).json({message:"Successfully deleted from the particlular tab!!"})
     } catch (error) {

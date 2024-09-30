@@ -19,7 +19,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
   function handleclearbtn(){
     setquickadd("")
   }
-  async function empaddbtn(){
+  async function empaddbtn(){ //dont touch, this is the original code
     let newemp = await fetch(`http://localhost:9000/empID/${quickadd}`);
     let fdata = await newemp.json();
     if(fdata.length>0){
@@ -32,6 +32,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
             name: fdata[0].name,
             photo: fdata[0].photo,
             role: fdata[0].role,
+            remarks:fdata[0].remarks,
             category: currcat,
             quater:activeQuarter
           }),
@@ -44,6 +45,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
             name: data.name,
             photo: data.photo,
             role: data.role,
+            remarks:data.remarks,
             category: currcat,
             quater:activeQuarter
           }
@@ -55,6 +57,61 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     else{
       window.alert("something went wrong!! Please check with emp ID")
       handleclearbtn()
+    }
+  }
+  async function handleMultipleEmpAdd() {
+  
+    const inputStr = quickadd.toString();  
+
+    const empIds = inputStr.match(/\d{10}/g); 
+
+    if (empIds && empIds.length > 0) {
+      for (let empID of empIds) {
+        try {
+          let newemp = await fetch(`http://localhost:9000/empID/${empID}`);
+          let fdata = await newemp.json();
+
+          if (fdata.length > 0) {
+            const response = await fetch(`http://localhost:9000/add`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: fdata[0].name,
+                photo: fdata[0].photo,
+                role: fdata[0].role,
+                remarks:fdata[0].remarks,
+                category: currcat,
+                quater: activeQuarter
+              }),
+            });
+
+            if (response.ok) {
+              let data = await response.json();
+              const newEmployee = {
+                _id: data._id,
+                name: data.name,
+                photo: data.photo,
+                role: data.role,
+                remarks:data.remarks,
+                category: currcat,
+                quater: activeQuarter
+              };
+              setEmployees(prevEmployees => [...prevEmployees, newEmployee]);
+            }
+          } else {
+            console.error(`Employee ID ${empID} not found`);
+          }
+        } catch (error) {
+          console.error(`Error adding employee ID ${empID}:`, error);
+        }
+      }
+
+      refreshCategoryCount(currcat);
+      handleclearbtn();
+    } else {
+      window.alert("Please enter valid 10-digit employee IDs.");
     }
   }
  useEffect(() => {
@@ -128,7 +185,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
               <div className="btncontainer" style={{margin:"auto",display:"flex", justifyContent:"space-around", width:"100%"}}>
                 <button className="btn btn-danger" style={{maxWidth:"50%",  }} onClick={handleclearbtn}>Clear</button>
                 <button className="btn btn-primary" style={{maxWidth:"50%",  }}
-                onClick={empaddbtn}>Add</button>
+                onClick={handleMultipleEmpAdd}>Add</button>
               </div>
               </div>
         </div>

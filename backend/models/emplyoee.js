@@ -14,6 +14,10 @@ const emplyoeeSchema = mongoose.Schema(
             type:String,
             require:true
         }, 
+        remarks:{
+            type:String,
+            require:true
+        },
         category:{
             type:String,
             require:true
