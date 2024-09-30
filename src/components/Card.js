@@ -11,6 +11,52 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     category:"",
     quater:""
   });
+  const [quickadd , setquickadd] = useState("")
+
+  function handlequickadd(e){
+    setquickadd(e.target.value)
+  }
+  function handleclearbtn(){
+    setquickadd("")
+  }
+  async function empaddbtn(){
+    let newemp = await fetch(`http://localhost:9000/empID/${quickadd}`);
+    let fdata = await newemp.json();
+    if(fdata.length>0){
+        const response = await fetch(`http://localhost:9000/add`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: fdata[0].name,
+            photo: fdata[0].photo,
+            role: fdata[0].role,
+            category: currcat,
+            quater:activeQuarter
+          }),
+        });
+        let newEmployee
+        if(response.ok){
+          let data = await response.json()
+          newEmployee = {
+            _id: data._id,
+            name: data.name,
+            photo: data.photo,
+            role: data.role,
+            category: currcat,
+            quater:activeQuarter
+          }
+        }
+          setEmployees([...employees, newEmployee]);
+          refreshCategoryCount(currcat)
+          handleclearbtn()
+    }
+    else{
+      window.alert("something went wrong!! Please check with emp ID")
+      handleclearbtn()
+    }
+  }
  useEffect(() => {
     const fetching = async () => {
       try {
@@ -44,7 +90,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         {employees.length > 0 ? (
           employees.map((employee, index) => (
             <>
-            {employee.name!=null &&
+            {
           <CardItem 
           currtab ={currcat}
           key={employee._id} 
@@ -70,6 +116,22 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
           </>
         )}
       </div>
+        <div className="addcard" >
+              <div class="card" style={{"width": "18rem", "margin":"auto", 
+                "marginTop":"10px", "marginBottom":"25px", padding:"15px"
+              }}>
+              <div class="card-body">
+                <h5 class="card-title">Quick Add</h5>
+                <label for="exampleInputEmail1" class="form-label">Emp ID:</label>
+                <input type="number" class="form-control" id="quickempid" value={quickadd} onChange={handlequickadd}/>
+              </div>
+              <div className="btncontainer" style={{margin:"auto",display:"flex", justifyContent:"space-around", width:"100%"}}>
+                <button className="btn btn-danger" style={{maxWidth:"50%",  }} onClick={handleclearbtn}>Clear</button>
+                <button className="btn btn-primary" style={{maxWidth:"50%",  }}
+                onClick={empaddbtn}>Add</button>
+              </div>
+              </div>
+        </div>
       <EmpAddButton currtab ={currcat} employees={employees} setEmployees={setEmployees} setNewemployee={setNewemployee}
       activeQuarter={activeQuarter} refreshCategoryCount={refreshCategoryCount}></EmpAddButton>
     </>

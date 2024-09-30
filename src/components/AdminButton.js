@@ -133,7 +133,7 @@ const AdminButton = () => {
     className="btn btn-warning"
     style={{ marginTop: '74px',
       position:"absolute",
-      left:"56.5rem",
+      left:"65.5rem",
       width:"9rem",
       height:"2.5rem",
      }}

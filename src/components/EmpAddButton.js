@@ -24,6 +24,7 @@ const EmpAddButton = (props) => {
       window.alert("Employee not found!!")
     }
   }
+  
   async function handleAddEmpbtn() {
     let name = document.getElementById('new-name').value;
     let role = document.getElementById('new-role').value;

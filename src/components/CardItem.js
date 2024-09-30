@@ -31,9 +31,10 @@ const CardItem = (props) => {
   }, [currEmp, emparr.length]);
 
 
-      if(!empdetails){
-        return null
-      }
+  if(!empdetails){
+      return null
+    }
+    
   function handleNext(){
     if(currEmp<emparr.length-1){
       setcurrEmp(currEmp+1)
