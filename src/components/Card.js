@@ -174,13 +174,13 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         )}
       </div>
         <div className="addcard" >
-              <div class="card" style={{"width": "18rem", "margin":"auto", 
+              <div className="card" style={{"width": "18rem", "margin":"auto", 
                 "marginTop":"10px", "marginBottom":"25px", padding:"15px"
               }}>
-              <div class="card-body">
-                <h5 class="card-title">Quick Add</h5>
-                <label for="exampleInputEmail1" class="form-label">Emp ID:</label>
-                <input type="number" class="form-control" id="quickempid" value={quickadd} onChange={handlequickadd}/>
+              <div className="card-body">
+                <h5 className="card-title">Quick Add</h5>
+                <label htmlFor="exampleInputEmail1" className="form-label">Emp ID:</label>
+                <input type="number" className="form-control" id="quickempid" value={quickadd} onChange={handlequickadd}/>
               </div>
               <div className="btncontainer" style={{margin:"auto",display:"flex", justifyContent:"space-around", width:"100%"}}>
                 <button className="btn btn-danger" style={{maxWidth:"50%",  }} onClick={handleclearbtn}>Clear</button>

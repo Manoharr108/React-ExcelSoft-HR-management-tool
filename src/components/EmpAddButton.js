@@ -11,7 +11,7 @@ const EmpAddButton = (props) => {
   }
 
   async function handlefetchbtn(){
-    let empid = document.getElementById("empid").value
+    let empid = document.getElementById("empid").value;
     // http://localhost:9000/empID/0000000002
     let newemp = await fetch(`http://localhost:9000/empID/${empid}`);
     let data = await newemp.json();
@@ -21,7 +21,7 @@ const EmpAddButton = (props) => {
       document.getElementById('new-photo').value = data[0].photo;
     }
     else{
-      window.alert("Employee not found!!")
+      window.alert("Employee not found!!");
     }
   }
   
