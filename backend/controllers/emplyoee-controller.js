@@ -47,22 +47,7 @@ exports.ModifyEmployee = async (req, res) => {
     return res.status(500).json({message:error.message})
    }
 };
-// exports.ModifyTab = async (req, res) => {
-//    let {tabname} = req.params;
-//    try {
-//     let emp = await operation.findOneAndUpdate({category:tabname, n},
-//         {
-//             name:name,
-//             photo:photo,
-//             role:role
-//         }
-//     )
-//     await emp.save({});
-//     return res.status(200).json({message:"successfully updated user!!"})
-//    } catch (error) {
-//     return res.status(500).json({message:error.message})
-//    }
-// };
+
 
 exports.Emplyoee = async(req,res)=>{
     let {category, qtr} = req.params;
