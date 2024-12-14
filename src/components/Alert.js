@@ -1,20 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 
-const Alert = (props) => {
+const Alert = ({ text, type, onDismiss }) => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (text) {
+      setVisible(true);
+      const timeout = setTimeout(() => {
+        setVisible(false);
+        if (onDismiss) onDismiss();  
+      }, 3000);
+
+      return () => clearTimeout(timeout); 
+    }
+  }, [text, onDismiss]);
+
   return (
-    <>
-    <div className="alert alert-primary" role="alert" style={{
-        // visibility:props.status,
-        position:"fixed",
-        zIndex:1,
-        right:"85px",
-        top:"186px"
-        
-    }}>
-        {props.text}
-    </div>
-    </>
-  )
-}
+    visible && (
+      <div
+        className={`alert alert-${type || 'primary'}`}
+        role="alert"
+        style={{
+          position: 'fixed',
+          zIndex: 121,
+          right: '85px',
+          top: '186px',
+        }}
+      >
+        {text}
+      </div>
+    )
+  );
+};
 
-export default Alert
+export default Alert;

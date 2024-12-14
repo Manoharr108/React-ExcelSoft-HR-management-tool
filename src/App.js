@@ -1,16 +1,10 @@
-// import Header from './components/Header'
 import AdminButton from './components/AdminButton';
-// import Dropdown from './components/Dropdown';
-// import EmpAddButton from './components/EmpAddButton';
-// import Card from './components/Card'
+import Network from './components/Network';
 function App() {
   return (
   <>
-    {/* <Header></Header> */}
-    {/* <EmpAddButton></EmpAddButton> */}
-    {/* <Dropdown></Dropdown> */}
+    <Network></Network>
     <AdminButton></AdminButton>
-    {/* <Card></Card> */}
   </>
   );
 }

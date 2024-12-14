@@ -12,7 +12,7 @@ const Dropdown = () => {
         let employees = await response.json();
 
         // Extracting unique quarters
-        let uniqueQuarters = [...new Set(employees.emp.map(emp => emp.quater))];
+        let uniqueQuarters = [...new Set(employees.emp.map(emp => emp.quarter))];
 
         uniqueQuarters.sort((a, b) => {
           const [yearA, quarterA] = a.split('Q');

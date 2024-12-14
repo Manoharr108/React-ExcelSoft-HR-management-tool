@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Tab from './Tab';
 import Card from './Card';
 import DeleteTab from './DeleteTab';
-// import EditTab from './EditTab';
 
 function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
@@ -64,10 +63,6 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
             />
           ))}
         </ul>
-{/* 
-        <EditTab
-        activeCategory = {activetab}
-        ></EditTab> */}
         <DeleteTab 
           value={activetab} 
           categories={categories}
@@ -77,6 +72,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
           activeQuarter = {activeQuarter}
         />
       </div>
+     
 
       <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount}></Card>
     </>
