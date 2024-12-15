@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CardItem from "./CardItem";  
 import EmpAddButton from "./EmpAddButton";
-import Alert from './Alert'; // Import the Alert component
+import Alert from './Alert';
 
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
   const [employees, setEmployees] = useState([]); 
@@ -39,10 +39,11 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     if (empIds && empIds.length > 0) {
       for (let empID of empIds) {
         try {
-          let newemp = await fetch(`http://localhost:9000/empID/${empID}`);
+          SetLoading(true);
+          let newemp = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${empID}`);
           let fdata = await newemp.json();
           if (fdata.length > 0) {
-            const response = await fetch(`http://localhost:9000/add`, {
+            const response = await fetch(`https://excel-soft-nodejs.vercel.app/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -72,21 +73,26 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
                 quarter: activeQuarter
               };
               setEmployees(prevEmployees => [...prevEmployees, newEmployee]);
+              SetLoading(false);
               handleAlert("Employee added successfully!", "success");
             }
           } else {
             // window.alert(`Employee ID ${empID} not found`);
+            SetLoading(false);
             handleAlert(`Employee ID ${empID} not found`, "danger");
           }
         } catch (error) {
           // console.error(`Error adding employee ID ${empID}:`, error);
+          SetLoading(false);
           handleAlert('Error adding employee.', 'danger');
         }
       }
       refreshCategoryCount(currcat);
       handleclearbtn();
+      SetLoading(false)
     } else {
       // window.alert("Please enter valid 10-digit employee IDs.");
+      SetLoading(false)
       handleAlert("Please enter valid 10-digit employee IDs.", "danger");
       // handleclearbtn();
     }
@@ -102,7 +108,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     const fetching = async () => {
       try {
         SetLoading(true);
-        const response = await fetch(`http://localhost:9000/emp/${currcat}/${activeQuarter}`);
+        const response = await fetch(`https://excel-soft-nodejs.vercel.app/emp/${currcat}/${activeQuarter}`);
         const data = await response.json();
 
         let filteredEmployees = await data.filter(emp => emp.quarter === activeQuarter && emp.name && emp.name.trim() !== "");

@@ -8,7 +8,7 @@ const Dropdown = () => {
   useEffect(() => {
     async function fetchEmployees() {
       try {
-        let response = await fetch('http://localhost:9000/employees'); 
+        let response = await fetch('https://excel-soft-nodejs.vercel.app/employees'); 
         let employees = await response.json();
 
         // Extracting unique quarters

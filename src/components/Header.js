@@ -14,7 +14,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
   
 //coutns the no of employees
   async function countfunction(category) {
-    let data = await fetch(`http://localhost:9000/tab/${category}/${activeQuarter}`);
+    let data = await fetch(`https://excel-soft-nodejs.vercel.app/tab/${category}/${activeQuarter}`);
     let response = await data.json();
     return response.length - 1;
   }
@@ -74,7 +74,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
       </div>
      
 
-      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount}></Card>
+      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount} ></Card>
     </>
   );
 }

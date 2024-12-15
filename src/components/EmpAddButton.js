@@ -26,7 +26,7 @@ const EmpAddButton = (props) => {
         return handleAlert('Employee ID cannot be empty!', "danger");
       }
 
-      const response = await fetch(`http://localhost:9000/empID/${employeeDetails.empid}`);
+      const response = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${employeeDetails.empid}`);
       if (!response.ok) {
         throw new Error('Failed to fetch employee data.');
       }
@@ -59,7 +59,7 @@ const EmpAddButton = (props) => {
     }
 
     try {
-      const response = await fetch('http://localhost:9000/add', {
+      const response = await fetch('https://excel-soft-nodejs.vercel.app/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

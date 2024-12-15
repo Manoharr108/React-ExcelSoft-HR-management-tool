@@ -60,7 +60,7 @@ const CardItem = (props) => {
   
     try {
       const response = await fetch(
-        `http://localhost:9000/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
+        `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
         { method: "DELETE" }
       );
   
@@ -79,7 +79,7 @@ const CardItem = (props) => {
     props.SetLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:9000/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
+        `https://excel-soft-nodejs.vercel.app/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
       );
       const data = await response.json();
    
@@ -121,7 +121,7 @@ const CardItem = (props) => {
 
     try {
       const response = await fetch(
-        `http://localhost:9000/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
+        `https://excel-soft-nodejs.vercel.app/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
         {
           method: "PUT",
           headers: {

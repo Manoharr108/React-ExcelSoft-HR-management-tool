@@ -1,5 +1,6 @@
 import React from 'react'
-import loadingGif from "../assets/loading.gif"
+// import loadingGif from "../assets/loading.gif"
+import loading2 from  "../assets/loading-gif.gif"
 const Loader = () => {
   return (
    <>
@@ -12,7 +13,7 @@ const Loader = () => {
     justifyContent:"center",
     height:"100vh"
      }}>
-   <img src={loadingGif} alt="loading gif" style={{
+   <img src={loading2} alt="loading gif" style={{
     display: "block",
     marginLeft: "auto",
     marginRight: "auto",
