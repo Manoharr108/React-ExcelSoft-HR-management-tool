@@ -60,7 +60,8 @@ const CardItem = (props) => {
   
     try {
       const response = await fetch(
-        `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
+        // `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
+        `http://localhost:9000/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
         { method: "DELETE" }
       );
   
@@ -79,21 +80,23 @@ const CardItem = (props) => {
     props.SetLoading(true);
     try {
       const response = await fetch(
-        `https://excel-soft-nodejs.vercel.app/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
+        // `https://excel-soft-nodejs.vercel.app/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
+        `http://localhost:9000/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
       );
       const data = await response.json();
-   
-      let name = document.getElementById("name");
-      let photo = document.getElementById("photo");
-      let role = document.getElementById("role");
+      console.log(data)
+      let name = document.getElementById("editname");
+      let photo = document.getElementById("editphoto");
+      let role = document.getElementById("editrole");
       let id = document.getElementById("id");
-      let remarks = document.getElementById("remarks");
+      let remarks = document.getElementById("editremarks");
 
       id.value = data.empid;
       name.value = data.name;
       photo.value = data.photo;
       role.value = data.role; 
       remarks.value = data.remarks; 
+      
       props.SetLoading(false);
      
     } catch (error) {
@@ -107,10 +110,10 @@ const CardItem = (props) => {
     props.SetLoading(true);
     let empid = document.getElementById("id").value;
     empid = Number.parseInt(empid);
-    let name = document.getElementById("name").value;
-    let photo = document.getElementById("photo").value;
-    let role = document.getElementById("role").value;
-    let remarks = document.getElementById("remarks").value;
+    let name = document.getElementById("editname").value;
+    let photo = document.getElementById("editphoto").value;
+    let role = document.getElementById("editrole").value;
+    let remarks = document.getElementById("editremarks").value;
 
     const updatedEditForm = {
       name,
@@ -121,7 +124,8 @@ const CardItem = (props) => {
 
     try {
       const response = await fetch(
-        `https://excel-soft-nodejs.vercel.app/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
+        `http://localhost:9000/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
+        // `https://excel-soft-nodejs.vercel.app/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
         {
           method: "PUT",
           headers: {
@@ -210,7 +214,6 @@ const CardItem = (props) => {
         id={`imageModal-${props.value}`}
         tabIndex="-1"
         aria-labelledby="employeeModalLabel"
-        aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
@@ -297,6 +300,7 @@ const CardItem = (props) => {
         id="exampleModalEditEmp"
         tabIndex="-1"
         aria-labelledby="exampleModalLabeledit"
+        aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
@@ -314,7 +318,7 @@ const CardItem = (props) => {
             <div className="modal-body">
               <form id="addEmp">
                 <div className="mb-3">
-                  <label htmlFor="employee-id" className="col-form-label">
+                  <label htmlFor="id" className="col-form-label">
                     ID:
                   </label>
                   <input
@@ -325,13 +329,13 @@ const CardItem = (props) => {
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="employee-name" className="col-form-label">
+                  <label htmlFor="name" className="col-form-label">
                     Name:
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="name"
+                    id="editname"
                   />
                 </div>
                 <div className="mb-3">
@@ -341,27 +345,27 @@ const CardItem = (props) => {
                   <input
                     type="text"
                     className="form-control"
-                    id="role"
+                    id="editrole"
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="employee-photo" className="col-form-label">
+                  <label htmlFor="photo" className="col-form-label">
                     Image URL:
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="photo"
+                    id="editphoto"
                   />
                 </div>
                 <div className="mb-3">
-                  <label htmlFor="employee-remarks" className="col-form-label">
+                  <label htmlFor="remarks" className="col-form-label">
                     Remarks:
                   </label>
-                  <input
+                  <textarea
                     type="text"
                     className="form-control"
-                    id="remarks"
+                    id="editremarks"
                   />
                 </div>
               </form>

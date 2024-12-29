@@ -40,10 +40,12 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
       for (let empID of empIds) {
         try {
           SetLoading(true);
-          let newemp = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${empID}`);
+          // let newemp = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${empID}`);
+          let newemp = await fetch(`http://localhost:9000/empID/${empID}`);
           let fdata = await newemp.json();
           if (fdata.length > 0) {
-            const response = await fetch(`https://excel-soft-nodejs.vercel.app/add`, {
+            // const response = await fetch(`https://excel-soft-nodejs.vercel.app/add`, {
+            const response = await fetch(`http://localhost:9000/add`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -77,12 +79,10 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
               handleAlert("Employee added successfully!", "success");
             }
           } else {
-            // window.alert(`Employee ID ${empID} not found`);
             SetLoading(false);
             handleAlert(`Employee ID ${empID} not found`, "danger");
           }
         } catch (error) {
-          // console.error(`Error adding employee ID ${empID}:`, error);
           SetLoading(false);
           handleAlert('Error adding employee.', 'danger');
         }
@@ -91,10 +91,8 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
       handleclearbtn();
       SetLoading(false)
     } else {
-      // window.alert("Please enter valid 10-digit employee IDs.");
       SetLoading(false)
       handleAlert("Please enter valid 10-digit employee IDs.", "danger");
-      // handleclearbtn();
     }
   }
 
@@ -108,7 +106,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     const fetching = async () => {
       try {
         SetLoading(true);
-        const response = await fetch(`https://excel-soft-nodejs.vercel.app/emp/${currcat}/${activeQuarter}`);
+        const response = await fetch(`http://localhost:9000/emp/${currcat}/${activeQuarter}`);
         const data = await response.json();
 
         let filteredEmployees = await data.filter(emp => emp.quarter === activeQuarter && emp.name && emp.name.trim() !== "");
@@ -124,8 +122,16 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
  
   return (
     <>
-      {alert.visible && <Alert text={alert.message} type={alert.type} />} {/* Display alert if visible */}
-
+      {alert.visible && <Alert text={alert.message} type={alert.type} />} 
+      
+      <EmpAddButton
+        currtab={currcat}
+        employees={employees}
+        setEmployees={setEmployees}
+        setNewemployee={setNewemployee}
+        activeQuarter={activeQuarter}
+        refreshCategoryCount={refreshCategoryCount}
+      />
       <div className="cardContainer" style={{
         display: "flex",
         flexWrap: "wrap",   
@@ -142,10 +148,10 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
               key={`${employee.empid}-${index}`}
               currtab={currcat}
               index={index}
-              name={employee.name || "Unknown"}
-              achievement={employee.achievement || "None"}
-              image={employee.photo || "placeholder.jpg"}
-              role={employee.role || "Unknown"}
+              name={employee.name}
+              achievement={employee.achievement}
+              image={employee.photo }
+              role={employee.role }
               value={employee.empid}
               remarks={employee.remarks || "No remarks available"}
               employees={employees}
@@ -159,9 +165,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         ) : (
           <h1>No employees found for this category.</h1>
         )}
-
       </div>
-
 
       <div className="addcard">
         <div className="card" style={{ width: "18rem", margin: "auto", marginTop: "10px", marginBottom: "25px", padding: "15px" }}>
@@ -176,15 +180,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
           </div>
         </div>
       </div>
-
-      <EmpAddButton
-        currtab={currcat}
-        employees={employees}
-        setEmployees={setEmployees}
-        setNewemployee={setNewemployee}
-        activeQuarter={activeQuarter}
-        refreshCategoryCount={refreshCategoryCount}
-      />
+  
     </>
   );
 }

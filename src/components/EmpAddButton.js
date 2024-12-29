@@ -3,6 +3,7 @@ import Alert from './Alert';
 
 const EmpAddButton = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
+  
   const [employeeDetails, setEmployeeDetails] = useState({
     empid: '',
     name: '',
@@ -26,7 +27,8 @@ const EmpAddButton = (props) => {
         return handleAlert('Employee ID cannot be empty!', "danger");
       }
 
-      const response = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${employeeDetails.empid}`);
+      // const response = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${employeeDetails.empid}`);
+      const response = await fetch(`http://localhost:9000/empID/${employeeDetails.empid}`);
       if (!response.ok) {
         throw new Error('Failed to fetch employee data.');
       }
@@ -59,7 +61,8 @@ const EmpAddButton = (props) => {
     }
 
     try {
-      const response = await fetch('https://excel-soft-nodejs.vercel.app/add', {
+      // const response = await fetch('https://excel-soft-nodejs.vercel.app/add', {
+      const response = await fetch('http://localhost:9000/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -96,7 +99,9 @@ const EmpAddButton = (props) => {
       <button
         className="btn btn-success"
         type="button"
-        style={{ position: 'fixed', bottom: '20px', right: '20px', marginTop: '30px' }}
+        style={{
+          marginTop:"-9%",marginLeft:"63.5%",marginTop:"-8.4%"
+        }}
         data-bs-toggle="modal"
         data-bs-target="#exampleModalEmp"
       >

@@ -16,7 +16,9 @@ const AdminButton = () => {
     const fetching = async () => {
       try {
         SetLoading(true);
-        const response = await fetch(`https://excel-soft-nodejs.vercel.app/achievers-employees`);
+        // const response = await fetch(`https://excel-soft-nodejs.vercel.app/achievers-employees`);
+        const response = await fetch(`http://localhost:9000/achievers-employees`);
+      
         const data = await response.json();
 
         let uniqueQuarters = [...new Set(data.emp.map((emp) => emp.quarter))];
@@ -65,7 +67,8 @@ const AdminButton = () => {
 
     if (newCategory && proceed) {
       try {
-        const response = await fetch("https://excel-soft-nodejs.vercel.app/addtab", {
+        // const response = await fetch("https://excel-soft-nodejs.vercel.app/addtab", {
+        const response = await fetch("http://localhost:9000/addtab", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -150,9 +153,9 @@ const AdminButton = () => {
       <button
         className="btn btn-warning"
         style={{
-          marginTop: "74px",
+          marginTop: "3.1%",
           position: "absolute",
-          left: "56.5rem",
+          left: "76%",
           width: "9rem",
           height: "2.5rem",
         }}

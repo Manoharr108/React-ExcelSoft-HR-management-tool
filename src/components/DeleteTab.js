@@ -7,7 +7,8 @@ const DeleteTab = (props) => {
   const handleDeleteBtn = async () => {
     try {
       const response = await fetch(
-        `https://excel-soft-nodejs.vercel.app/tab/${props.value}/${props.activeQuarter}`,
+        `http://localhost:9000/tab/${props.value}/${props.activeQuarter}`,
+        // `https://excel-soft-nodejs.vercel.app/tab/${props.value}/${props.activeQuarter}`,
         {
           method: "DELETE",
         }
