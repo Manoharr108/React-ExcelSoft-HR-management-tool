@@ -132,6 +132,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         activeQuarter={activeQuarter}
         refreshCategoryCount={refreshCategoryCount}
       />
+      
       <div className="cardContainer" style={{
         display: "flex",
         flexWrap: "wrap",   
