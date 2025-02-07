@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Tab from './Tab';
 import Card from './Card';
 import DeleteTab from './DeleteTab';
-import Logout from './Logout';
+
 
 function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
@@ -72,7 +72,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
           activeCategory = {activetab}
           activeQuarter = {activeQuarter}
         />
-        <Logout></Logout>
+
       </div>
      
 
