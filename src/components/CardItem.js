@@ -63,6 +63,7 @@ const CardItem = (props) => {
         // `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
         `http://localhost:9000/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
         { method: "DELETE" }
+        
       );
   
       if (!response.ok) {

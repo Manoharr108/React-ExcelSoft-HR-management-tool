@@ -18,7 +18,6 @@ const AdminButton = () => {
         SetLoading(true);
         // const response = await fetch(`https://excel-soft-nodejs.vercel.app/achievers-employees`);
         const response = await fetch(`http://localhost:9000/achievers-employees`);
-      
         const data = await response.json();
 
         let uniqueQuarters = [...new Set(data.emp.map((emp) => emp.quarter))];
