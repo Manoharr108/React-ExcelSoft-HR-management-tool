@@ -11,7 +11,7 @@ const AdminButton = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [loading, SetLoading] = useState(false);
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-
+  
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -19,20 +19,18 @@ const AdminButton = () => {
         // const response = await fetch(`https://excel-soft-nodejs.vercel.app/achievers-employees`);
         const response = await fetch(`http://localhost:9000/achievers-employees`);
         const data = await response.json();
-
+      
         let uniqueQuarters = [...new Set(data.emp.map((emp) => emp.quarter))];
         uniqueQuarters.sort((a, b) => {
           const [yearA, quarterA] = a.split("Q");
           const [yearB, quarterB] = b.split("Q");
           return yearB - yearA || quarterB - quarterA;
         });
-
         setQuarters(uniqueQuarters);
-
         const filteredEmployees = data.emp.filter((emp) => emp.quarter === activeQuarter);
 
-        const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
 
+        const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
         setCategories(uniqueCategories);
 
         if (uniqueCategories.length > 0) {
@@ -75,6 +73,7 @@ const AdminButton = () => {
           body: JSON.stringify({
             category: newCategory,
             quarter: document.getElementById("quarter").value,
+            epublic:false
           }),
         });
 
@@ -105,7 +104,7 @@ const AdminButton = () => {
   return (
     <>
       {alert.visible && (
-        <Alert
+        <Alert // for alert
           text={alert.message}
           type={alert.type}
           onDismiss={() => setAlert({ visible: false, message: "", type: "" })}
@@ -119,7 +118,8 @@ const AdminButton = () => {
           marginRight: "12px",
         }}
       >
-        <button
+        
+        <button //dropdown for quarer
           className="btn btn-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
@@ -149,6 +149,7 @@ const AdminButton = () => {
           )}
         </ul>
       </div>
+      
       <button
         className="btn btn-warning"
         style={{
@@ -169,7 +170,6 @@ const AdminButton = () => {
         id="exampleModal"
         tabIndex={-1}
         aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">

@@ -70,6 +70,7 @@ const CardItem = (props) => {
         throw new Error(`Failed to delete employee. Status: ${response.status}`);
       }
       props.refreshCategoryCount(props.currtab);
+      props.refreshPublishStatus()
       setAlert({ text: "Employee deleted successfully!", type: "success" });
     } catch (error) {
       console.error("Error deleting employee:", error);
@@ -172,8 +173,8 @@ const CardItem = (props) => {
       
       {/* Card View */}
       <div
-        className="card"
-        style={{ width: "15rem", marginBottom: "1rem" }}
+        className={`card border-3 border-${props.epublic?"success":"danger"}`}
+        style={{ width: "16rem", marginBottom: "1rem", padding:"10px" }}
       >
         <img
           src={props.image}

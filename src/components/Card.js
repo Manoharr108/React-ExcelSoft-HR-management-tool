@@ -3,7 +3,7 @@ import CardItem from "./CardItem";
 import EmpAddButton from "./EmpAddButton";
 import Alert from './Alert';
 
-function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
+function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
   const [employees, setEmployees] = useState([]); 
   const [newEmployee, setNewemployee] = useState({
     empid: "",
@@ -11,7 +11,8 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
     photo: "",
     category: "",
     quarter: "",
-    remarks: ""
+    remarks: "", 
+    epublic:false
   });
 
   const [quickadd, setquickadd] = useState("");
@@ -31,6 +32,31 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
       setAlert({ visible: false, message: "", type: "" });
     }, 3000);
   };
+
+  async function puclishbtn(){
+    try {
+      SetLoading(true);
+      const data = await fetch(`http://localhost:9000/publish/${activeQuarter}`, {
+        method:"PUT"
+      })
+      
+      if(!data.ok){
+        SetLoading(false);
+        handleAlert(`Something went wrong`, "danger");
+        return 
+      }
+      const res  = await data.json()
+      SetLoading(false);
+      handleAlert(`Successfully published employees for quarter ${activeQuarter} please wait!`, "success");
+      setTimeout(()=>{
+        window.location.reload();
+      },1000)
+
+    } catch (error) {
+      SetLoading(false);
+      handleAlert(`Something went wrong`, "danger");
+    }
+  }
 
   async function handleMultipleEmpAdd() {
     const inputStr = quickadd.toString();
@@ -58,6 +84,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
                 remarks: fdata[0].remarks,
                 category: currcat,
                 quarter: activeQuarter,
+                epublic:false
               }),
             });
             if(!response.ok){
@@ -72,7 +99,8 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
                 role: data.newEmp.role,
                 remarks: data.newEmp.remarks,
                 category: currcat,
-                quarter: activeQuarter
+                quarter: activeQuarter,
+                epublic:false
               };
               setEmployees(prevEmployees => [...prevEmployees, newEmployee]);
               SetLoading(false);
@@ -88,6 +116,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         }
       }
       refreshCategoryCount(currcat);
+      refreshPublishStatus()
       handleclearbtn();
       SetLoading(false)
     } else {
@@ -131,6 +160,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
         setNewemployee={setNewemployee}
         activeQuarter={activeQuarter}
         refreshCategoryCount={refreshCategoryCount}
+        refreshPublishStatus={refreshPublishStatus}
       />
       
       <div className="cardContainer" style={{
@@ -147,6 +177,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
           employees.map((employee, index) => (
             <CardItem
               key={`${employee.empid}-${index}`}
+              epublic={employee.epublic}
               currtab={currcat}
               index={index}
               name={employee.name}
@@ -161,6 +192,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
               refreshCategoryCount={refreshCategoryCount}
               activeQuarter={activeQuarter}
               currcat={currcat}
+              refreshPublishStatus={refreshPublishStatus}
             />
           ))
         ) : (
@@ -176,12 +208,14 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount }) {
             <input type="number" className="form-control" id="quickempid" value={quickadd} onChange={handlequickadd} onKeyDown={handleKeyDown} />
           </div>
           <div className="btncontainer" style={{ margin: "auto", display: "flex", justifyContent: "space-around", width: "100%" }}>
-            <button className="btn btn-danger" style={{ maxWidth: "50%" }} onClick={handleclearbtn}>Clear</button>
-            <button className="btn btn-primary" style={{ maxWidth: "50%" }} onClick={handleMultipleEmpAdd} >Add</button>
+            {/* <button className="btn btn-danger" style={{ maxWidth: "50%" }} onClick={handleclearbtn}>Clear</button> */}
+            <button className="btn btn-primary" style={{  width: "60%" }} onClick={handleMultipleEmpAdd} >Add</button>
           </div>
         </div>
       </div>
-  
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+      <button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>
+      </div>
     </>
   );
 }

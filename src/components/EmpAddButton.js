@@ -10,6 +10,7 @@ const EmpAddButton = (props) => {
     role: '',
     photo: '',
     remarks: '',
+    epublic: false
   });
 
   const handleAlert = (message, type) => {
@@ -44,6 +45,7 @@ const EmpAddButton = (props) => {
         role: data[0].role,
         photo: data[0].photo,
         remarks: data[0].remarks,
+        epublic:employeeDetails.epublic
       });
     } catch (error) {
       console.error('Error fetching employee:', error);
@@ -52,7 +54,7 @@ const EmpAddButton = (props) => {
   };
 
   const handleAddEmpBtn = async () => {
-    let { empid, name, role, photo, remarks } = employeeDetails;
+    let { empid, name, role, photo, remarks, epublic } = employeeDetails;
     empid = Number.parseInt(empid)
     const { currtab, activeQuarter } = props;
 
@@ -73,23 +75,24 @@ const EmpAddButton = (props) => {
           category: currtab,
           quarter: activeQuarter,
           remarks,
-        }),
+          epublic
+        })
       });
 
       if (!response.ok) {
         throw new Error('Failed to add employee.');
       }
 
-      const newEmployee = { empid, name, role, photo, remarks, category: currtab, quarter: activeQuarter };
+      const newEmployee = { empid, name, role, photo, remarks, category: currtab, quarter: activeQuarter, epublic: false };
       props.setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
       props.refreshCategoryCount(currtab);
-
-      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '' });
+      props.refreshPublishStatus()
+      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '',epublic: false });
       handleAlert('A new employee has been added!', 'success');
     } catch (error) {
       console.error('Error adding employee:', error);
       handleAlert('Employee already exists or something went wrong!', 'danger');
-      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '' });
+      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '',epublic: false });
     }
   };
 
@@ -109,7 +112,7 @@ const EmpAddButton = (props) => {
       </button>
 
       {/* Modal View */}
-      <div className="modal fade" id="exampleModalEmp" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade" id="exampleModalEmp" tabIndex="-1" aria-labelledby="exampleModalLabel" >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">

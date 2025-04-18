@@ -5,7 +5,7 @@ const achivierSchema = mongoose.Schema(
         empid:{
             type:Number,
             require:true,
-            maxlength:10
+            maxlength:10 
         },
         name:{
             type:String,
@@ -31,6 +31,10 @@ const achivierSchema = mongoose.Schema(
             type:String,
             require:true
         },
+        epublic:{
+            type:Boolean,
+            require:true
+        }
     }
 );
 

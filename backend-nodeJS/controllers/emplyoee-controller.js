@@ -2,7 +2,7 @@ const eoperation = require("../models/emplyoee");
 const aoperation = require("../models/achiever");
 
 exports.AddEmplyoee =async(req, res)=>{
-    let {empid, name, category, quarter, remarks, role, photo}= req.body;
+    let {empid, name, category, quarter, remarks, role, photo, epublic}= req.body;
     try{
         let emp = await eoperation.findOne({empid});
         if (!emp) {
@@ -19,8 +19,8 @@ exports.AddEmplyoee =async(req, res)=>{
             role: role,
             remarks: remarks,
             category: category,
-            quarter: quarter
-
+            quarter: quarter, 
+            epublic: epublic
         });
 
         await newEmp.save();
@@ -33,11 +33,12 @@ exports.AddEmplyoee =async(req, res)=>{
 }
 
 exports.AddTab =async(req, res)=>{
-    let { category, quarter}= req.body;
+    let { category, quarter, epublic}= req.body;
     try{
         const newtab = new aoperation({
             category:category,
-            quarter: quarter
+            quarter: quarter,
+            epublic
         });
         await newtab.save();
         return res.status(201).json({ message: 'Tab added to achivevers list', newtab });
@@ -189,4 +190,22 @@ exports.DeleteTab = async(req,res)=>{
     } catch (error) {
         return res.status(500).json({message:error.message})
     }
+}
+
+
+exports.publishquarter = async(req,res)=>{
+    try {
+        const { activeQuarter } = req.params;
+    
+        const result = await aoperation.updateMany(
+          { quarter: activeQuarter },
+          { $set: { epublic: true } }
+        );
+
+        return res.status(200).json({
+          message: `Successfully published employees for quarter ${activeQuarter}.`
+        });
+      } catch (error) {
+        return res.status(500).json({ message: 'Server error while publishing employees.', error })
+      }
 }

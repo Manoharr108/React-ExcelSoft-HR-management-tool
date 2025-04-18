@@ -6,12 +6,27 @@ import DeleteTab from './DeleteTab';
 
 function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
-
   const [categoryCounts, setCategoryCounts] = useState({});
+  const [publishstatus, Setpublishstatus] = useState(false)
+
 
   const handleTabClick = (category) => {
     setActivetab(category);
   };
+  
+  async function refreshPublishStatus() {
+    try {
+      let res = await fetch(`http://localhost:9000/achievers-employees`);
+      let data = await res.json();
+      
+      const filtered = data.emp.filter(emp => emp.quarter === activeQuarter);
+      const isAllPublished = filtered.every(emp => emp.epublic === true);
+      Setpublishstatus(isAllPublished);
+    } catch (err) {
+      console.error("Error refreshing publish status", err);
+    }
+  }
+  
   
   async function countfunction(category) {
     // let data = await fetch(`https://excel-soft-nodejs.vercel.app/tab/${category}/${activeQuarter}`);
@@ -19,10 +34,6 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
     let response = await data.json();
     return response.length - 1;
   }
-
-  useEffect(() => {
-    setActivetab(activeCategory); 
-  }, [activeCategory]);
 
   async function refreshCategoryCount(category){
     let count = await countfunction(category);
@@ -32,7 +43,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
     }))
   } 
 
-    useEffect(() => {
+  useEffect(() => {
     async function fetchCounts() {
       const counts = {};
       for (let category of categories) {
@@ -40,16 +51,27 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
         counts[category] = count;
       }
       setCategoryCounts(counts);
+      refreshPublishStatus()
     }
-
     fetchCounts();
-  }, [categories]);
+    setActivetab(activeCategory); 
+  }, [activeCategory, categories]);
+
+
 
   return (
     <>
-      <h1 className="container" style={{ textAlign: 'center', marginTop: '3rem' }}>
-        Employee Achievements - {activeQuarter}
-      </h1>
+      <h1
+  className="container"
+  style={{
+    textAlign: 'center',
+    marginTop: '3rem',
+    color: publishstatus ? 'green' : 'red' 
+  }}
+>
+  Employee Achievements - {activeQuarter} {`${publishstatus ? "(Fully published)" : "(Partial published)"}`}
+</h1>
+
       
       <div className="tabcontainer" style={{display:"flex",margin:"25px"}}>
         <ul className="nav nav-tabs">
@@ -76,7 +98,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
       </div>
      
 
-      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount} ></Card>
+      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount} refreshPublishStatus={refreshPublishStatus}></Card>
     </>
   );
 }

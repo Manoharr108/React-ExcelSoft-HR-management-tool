@@ -19,4 +19,6 @@ router.delete("/tab/:category/:quarter",controller.DeleteTab);
 
 router.put("/edit/:empid/:category/:quarter", controller.ModifyEmployee);
 
+router.put("/publish/:activeQuarter", controller.publishquarter)
+
 module.exports = router;
