@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import CardItem from "./CardItem";  
 import EmpAddButton from "./EmpAddButton";
 import Alert from './Alert';
+import { useAuth } from "../context/Authcontext";
+
 
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
   const [employees, setEmployees] = useState([]); 
@@ -15,9 +17,9 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     epublic:false
   });
 
+  const { logout,  isAdmin, canPublish, isViewer } = useAuth();
   const [quickadd, setquickadd] = useState("");
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-
   function handlequickadd(e) {
     setquickadd(e.target.value);
   }
@@ -131,6 +133,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     }
   };
   
+  
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -200,7 +203,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         )}
       </div>
 
-      <div className="addcard">
+     {isAdmin&& <div className="addcard">
         <div className="card" style={{ width: "18rem", margin: "auto", marginTop: "10px", marginBottom: "25px", padding: "15px" }}>
           <div className="card-body">
             <h5 className="card-title">Quick Add</h5>
@@ -212,9 +215,12 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
             <button className="btn btn-primary" style={{  width: "60%" }} onClick={handleMultipleEmpAdd} >Add</button>
           </div>
         </div>
+      </div>}
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+     { canPublish &&<button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>}
       </div>
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
-      <button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>
+      <button type="button" className="btn btn-danger btn-lg" onClick={logout}>LOGOUT</button>
       </div>
     </>
   );

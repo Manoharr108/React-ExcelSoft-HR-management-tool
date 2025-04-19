@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Loader from "./Loader";
 import Alert from "./Alert";
+import { useAuth } from "../context/Authcontext";
 
 const AdminButton = () => {
   const [quarters, setQuarters] = useState([]);
@@ -11,6 +12,8 @@ const AdminButton = () => {
   const [activeCategory, setActiveCategory] = useState("");
   const [loading, SetLoading] = useState(false);
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
+    const { isAdmin, canPublish, isViewer } = useAuth();
+
   
   useEffect(() => {
     const fetching = async () => {
@@ -101,6 +104,7 @@ const AdminButton = () => {
     setActiveQuarter(quarter);
   };
 
+
   return (
     <>
       {alert.visible && (
@@ -110,6 +114,7 @@ const AdminButton = () => {
           onDismiss={() => setAlert({ visible: false, message: "", type: "" })}
         />
       )}
+      
       <div
         className="dropdown"
         style={{
@@ -118,7 +123,7 @@ const AdminButton = () => {
           marginRight: "12px",
         }}
       >
-        
+
         <button //dropdown for quarer
           className="btn btn-secondary dropdown-toggle"
           type="button"
@@ -150,10 +155,10 @@ const AdminButton = () => {
         </ul>
       </div>
       
-      <button
+     {isAdmin&& <button
         className="btn btn-warning"
         style={{
-          marginTop: "5.1%",
+          marginTop: "8.1%",
           position: "absolute",
           left: "76%",
           width: "9rem",
@@ -163,8 +168,8 @@ const AdminButton = () => {
         data-bs-target="#exampleModal"
       >
         Add Tab ➕
-      </button>
-
+      </button>}
+      
       <div
         className="modal fade"
         id="exampleModal"
@@ -219,7 +224,7 @@ const AdminButton = () => {
                     <option value="Pat on the back">Pat on the back</option>
                   </select>
                 </div>
-
+              
                 <div className="modal-footer" style={{ height: "3rem" }}>
                   <button
                     type="button"
@@ -242,7 +247,6 @@ const AdminButton = () => {
         </div>
       </div>
       {loading && <Loader></Loader>}
-      
       <Header
         categories={categories}
         setCategories={setCategories}

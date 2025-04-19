@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Alert from './Alert';
-
+import { useAuth } from "../context/Authcontext";
 const EmpAddButton = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
-  
+  const { isAdmin, canPublish, isViewer } = useAuth();
   const [employeeDetails, setEmployeeDetails] = useState({
     empid: '',
     name: '',
@@ -99,7 +99,7 @@ const EmpAddButton = (props) => {
   return (
     <>
       {alert.visible && <Alert text={alert.message} type={alert.type} onDismiss={() => setAlert({ visible: false, message: '', type: '' })} />}
-      <button
+      {isAdmin&&<button
         className="btn btn-success"
         type="button"
         style={{
@@ -109,7 +109,7 @@ const EmpAddButton = (props) => {
         data-bs-target="#exampleModalEmp"
       >
         Add Employee ➕
-      </button>
+      </button>}
 
       {/* Modal View */}
       <div className="modal fade" id="exampleModalEmp" tabIndex="-1" aria-labelledby="exampleModalLabel" >

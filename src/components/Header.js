@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Tab from './Tab';
 import Card from './Card';
 import DeleteTab from './DeleteTab';
+import { useAuth } from "../context/Authcontext";
 
 
 function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [publishstatus, Setpublishstatus] = useState(false)
-
+  const { logout,  isAdmin, canPublish, isViewer } = useAuth();
 
   const handleTabClick = (category) => {
     setActivetab(category);
@@ -69,8 +70,12 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
     color: publishstatus ? 'green' : 'red' 
   }}
 >
-  Employee Achievements - {activeQuarter} {`${publishstatus ? "(Fully published)" : "(Partial published)"}`}
+  Employee Achievements - {activeQuarter} {`${publishstatus ? "(Fully Published)" : "(Not Fully Published)"}`}
 </h1>
+<h2 className="container text-center">
+  LOGIN : {isAdmin ? "Admin" : canPublish ? "Publisher" : "Viewer"}
+</h2>
+
 
       
       <div className="tabcontainer" style={{display:"flex",margin:"25px"}}>

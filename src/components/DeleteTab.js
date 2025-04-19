@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import Alert from "./Alert";
-
+import { useAuth } from "../context/Authcontext";
 const DeleteTab = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
+      const { isAdmin, canPublish, isViewer } = useAuth();
 
   const handleDeleteBtn = async () => {
+    
     try {
       const response = await fetch(
         `http://localhost:9000/tab/${props.value}/${props.activeQuarter}`,
@@ -69,7 +71,7 @@ const DeleteTab = (props) => {
           onDismiss={handleAlertDismiss}
         />
       )}
-      <button
+      {isAdmin&&<button
         className="btn btn-warning"
         type="button"
         style={{
@@ -84,7 +86,7 @@ const DeleteTab = (props) => {
         data-bs-target="#staticBackdrop"
       >
         Delete Tab ❌
-      </button>
+      </button>}
 
       {/* Modal View */}
       <div
