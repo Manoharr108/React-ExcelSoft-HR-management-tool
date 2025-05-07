@@ -3,6 +3,10 @@ import CardItem from "./CardItem";
 import EmpAddButton from "./EmpAddButton";
 import Alert from './Alert';
 import { useAuth } from "../context/Authcontext";
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
+
 
 
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
@@ -59,6 +63,52 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
       handleAlert(`Something went wrong`, "danger");
     }
   }
+
+  //this is place for excel download
+  const downloadAllEmployeesOfQuarter = async () => {
+    try {
+      SetLoading(true);
+      const res = await fetch(`http://localhost:9000/download/${activeQuarter}`);
+      if (!res.ok) {
+        SetLoading(false);
+        handleAlert("Failed to fetch employees for the quarter.", "danger");
+        return;
+      }
+      const data = await res.json();
+  
+      if (!data || data.length === 0) {
+        SetLoading(false);
+        handleAlert("No employees found for the current quarter.", "danger");
+        return;
+      }
+  
+      const sheetData = data
+      .filter(emp => emp.name && emp.name.trim() !== "" && emp.empid )
+      .map(emp => ({
+        EmpID: emp.empid,
+        Name: emp.name,
+        Role: emp.role,
+        Category: emp.category,
+        Quarter: emp.quarter,
+        Remarks: emp.remarks,
+        Published: emp.epublic ? "Yes" : "No"
+      }));
+    
+      const worksheet = XLSX.utils.json_to_sheet(sheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, `All_Employees_Q${activeQuarter}`);
+      const wbout = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([wbout], { type: "application/octet-stream" });
+      saveAs(blob, `All_Employees_Q${activeQuarter}.xlsx`);
+      SetLoading(false);
+    } catch (error) {
+      SetLoading(false);
+      handleAlert("Error downloading employee data.", "danger");
+      console.error(error);
+    }
+  };
+  
+  
 
   async function handleMultipleEmpAdd() {
     const inputStr = quickadd.toString();
@@ -216,6 +266,9 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
           </div>
         </div>
       </div>}
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+      <button type="button" className="btn btn-secondary btn-lg" onClick={downloadAllEmployeesOfQuarter}>Download (Excel copy all the employees of current quarter)</button>
+      </div>
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
      { canPublish &&<button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>}
       </div>

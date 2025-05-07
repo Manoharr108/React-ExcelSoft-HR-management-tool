@@ -11,6 +11,9 @@ router.get("/tab/:category/:quarter", controller.manageTab)//
 router.get("/empID/:empid",controller.EmplyoeeWithId);
 router.get("/employee/:empid/:category/:quarter", controller.FindAnEmplyoee);
 
+router.get("/download/:quarter", controller.AllEmployeeWithQuarter); //this is donwload button
+
+
 router.post("/add",controller.AddEmplyoee);
 router.post("/addtab",controller.AddTab);
 

@@ -209,3 +209,23 @@ exports.publishquarter = async(req,res)=>{
         return res.status(500).json({ message: 'Server error while publishing employees.', error })
       }
 }
+
+
+
+exports.AllEmployeeWithQuarter = async (req, res) => {
+    const { quarter } = req.params;
+    
+    try {
+        const employees = await aoperation.find({ quarter: quarter });
+        
+        if (!employees || employees.length === 0) {
+            return res.status(404).json({ message: "No employees found for this quarter." });
+        }
+
+        res.status(200).json(employees);
+    } catch (error) {
+        console.error("Error fetching employees by quarter:", error);
+        res.status(500).json({ message: "Internal server error." });
+  }
+};
+
