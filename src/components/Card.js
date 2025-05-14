@@ -7,8 +7,6 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
 
-
-
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
   const [employees, setEmployees] = useState([]); 
   const [newEmployee, setNewemployee] = useState({
@@ -22,15 +20,9 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
   });
 
   const { logout,  isAdmin, canPublish, isViewer } = useAuth();
-  const [quickadd, setquickadd] = useState("");
-  const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-  function handlequickadd(e) {
-    setquickadd(e.target.value);
-  }
 
-  function handleclearbtn() {
-    setquickadd("");
-  }
+  const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
+
 
   const handleAlert = (message, type) => {
     setAlert({ visible: true, message, type });
@@ -110,79 +102,8 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
   
   
 
-  async function handleMultipleEmpAdd() {
-    const inputStr = quickadd.toString();
-    const empIds = inputStr.match(/\d{10}/g);
 
-    if (empIds && empIds.length > 0) {
-      for (let empID of empIds) {
-        try {
-          SetLoading(true);
-          // let newemp = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${empID}`);
-          let newemp = await fetch(`http://localhost:9000/empID/${empID}`);
-          let fdata = await newemp.json();
-          if (fdata.length > 0) {
-            // const response = await fetch(`https://excel-soft-nodejs.vercel.app/add`, {
-            const response = await fetch(`http://localhost:9000/add`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                empid: fdata[0].empid,
-                name: fdata[0].name,
-                photo: fdata[0].photo,
-                role: fdata[0].role,
-                remarks: fdata[0].remarks,
-                category: currcat,
-                quarter: activeQuarter,
-                epublic:false
-              }),
-            });
-            if(!response.ok){
-              handleAlert("Employee already exists", "danger");
-            }
-            if (response.ok) {
-              let data = await response.json();
-              const newEmployee = {
-                empid: data.newEmp.empid,
-                name: data.newEmp.name,
-                photo: data.newEmp.photo,
-                role: data.newEmp.role,
-                remarks: data.newEmp.remarks,
-                category: currcat,
-                quarter: activeQuarter,
-                epublic:false
-              };
-              setEmployees(prevEmployees => [...prevEmployees, newEmployee]);
-              SetLoading(false);
-              handleAlert("Employee added successfully!", "success");
-            }
-          } else {
-            SetLoading(false);
-            handleAlert(`Employee ID ${empID} not found`, "danger");
-          }
-        } catch (error) {
-          SetLoading(false);
-          handleAlert('Error adding employee.', 'danger');
-        }
-      }
-      refreshCategoryCount(currcat);
-      refreshPublishStatus()
-      handleclearbtn();
-      SetLoading(false)
-    } else {
-      SetLoading(false)
-      handleAlert("Please enter valid 10-digit employee IDs.", "danger");
-    }
-  }
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') { 
-      handleMultipleEmpAdd();
-    }
-  };
-  
   
   useEffect(() => {
     const fetching = async () => {
@@ -214,6 +135,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         activeQuarter={activeQuarter}
         refreshCategoryCount={refreshCategoryCount}
         refreshPublishStatus={refreshPublishStatus}
+        SetLoading={SetLoading}
       />
       
       <div className="cardContainer" style={{
@@ -223,7 +145,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         justifyContent: "center",
         alignItems: "center",   
         margin: "0 auto",
-        marginTop: "10px",  
+        marginTop: "79px",  
       }}>
 
         {employees.length > 0 ? (
@@ -253,19 +175,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         )}
       </div>
 
-     {isAdmin&& <div className="addcard">
-        <div className="card" style={{ width: "18rem", margin: "auto", marginTop: "10px", marginBottom: "25px", padding: "15px" }}>
-          <div className="card-body">
-            <h5 className="card-title">Quick Add</h5>
-            <label htmlFor="exampleInputEmail1" className="form-label">Emp ID:</label>
-            <input type="number" className="form-control" id="quickempid" value={quickadd} onChange={handlequickadd} onKeyDown={handleKeyDown} />
-          </div>
-          <div className="btncontainer" style={{ margin: "auto", display: "flex", justifyContent: "space-around", width: "100%" }}>
-            {/* <button className="btn btn-danger" style={{ maxWidth: "50%" }} onClick={handleclearbtn}>Clear</button> */}
-            <button className="btn btn-primary" style={{  width: "60%" }} onClick={handleMultipleEmpAdd} >Add</button>
-          </div>
-        </div>
-      </div>}
+
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
       <button type="button" className="btn btn-secondary btn-lg" onClick={downloadAllEmployeesOfQuarter}>Download (Excel copy all the employees of current quarter)</button>
       </div>

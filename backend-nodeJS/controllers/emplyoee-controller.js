@@ -2,12 +2,12 @@ const eoperation = require("../models/emplyoee");
 const aoperation = require("../models/achiever");
 
 exports.AddEmplyoee =async(req, res)=>{
-    let {empid, name, category, quarter, remarks, role, photo, epublic}= req.body;
+    let {empid, name, category, quarter,mail, remarks, role, photo, epublic}= req.body;
     try{
-        let emp = await eoperation.findOne({empid});
-        if (!emp) {
-            return res.status(404).json({ message: 'Employee not found in database' });
-        }
+        // let emp = await eoperation.findOne({empid});
+        // if (!emp) {
+        //     return res.status(404).json({ message: 'Employee not found in database' });
+        // }
         const duplicateEntry = await aoperation.findOne({ empid, category, quarter });
         if (duplicateEntry) {
             return res.status(409).json({ message: 'Employee already exists in the achievers list for this category and quarter.' });
@@ -17,6 +17,7 @@ exports.AddEmplyoee =async(req, res)=>{
             name: name,
             photo: photo,
             role: role,
+            mail:mail,
             remarks: remarks,
             category: category,
             quarter: quarter, 

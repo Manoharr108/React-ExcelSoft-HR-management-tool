@@ -9,30 +9,36 @@ const AdminButton = () => {
   const [activeQuarter, setActiveQuarter] = useState(null);
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
+  const [newQuarter, setNewQuarter] = useState(""); // ← NEW STATE
   const [activeCategory, setActiveCategory] = useState("");
   const [loading, SetLoading] = useState(false);
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-    const { isAdmin, canPublish, isViewer } = useAuth();
+  const { isAdmin, canPublish, isViewer } = useAuth();
 
-  
+  const defaultCategories = [
+    "Most valuable Player",
+    "Extra Miler",
+    "Excelearn",
+    "Pat on the back",
+  ];
+
   useEffect(() => {
     const fetching = async () => {
       try {
         SetLoading(true);
-        // const response = await fetch(`https://excel-soft-nodejs.vercel.app/achievers-employees`);
         const response = await fetch(`http://localhost:9000/achievers-employees`);
         const data = await response.json();
-      
+
         let uniqueQuarters = [...new Set(data.emp.map((emp) => emp.quarter))];
         uniqueQuarters.sort((a, b) => {
           const [yearA, quarterA] = a.split("Q");
           const [yearB, quarterB] = b.split("Q");
           return yearB - yearA || quarterB - quarterA;
         });
+
         setQuarters(uniqueQuarters);
+
         const filteredEmployees = data.emp.filter((emp) => emp.quarter === activeQuarter);
-
-
         const uniqueCategories = [...new Set(filteredEmployees.map((employee) => employee.category))];
         setCategories(uniqueCategories);
 
@@ -41,11 +47,11 @@ const AdminButton = () => {
         } else {
           setActiveCategory("");
         }
-        document.getElementById("quarter").value = activeQuarter;
 
         if (uniqueQuarters.length > 0 && !activeQuarter) {
           setActiveQuarter(uniqueQuarters[0]);
         }
+
         SetLoading(false);
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -54,49 +60,52 @@ const AdminButton = () => {
     fetching();
   }, [activeQuarter]);
 
-  const handleAddCategory = async (e) => {
+  const handleAddNewQuarter = async (e) => {
     e.preventDefault();
-    let proceed = true;
-    categories.forEach((i) => {
-      if (i === newCategory && document.getElementById("quarter").value === activeQuarter) {
-        setNewCategory("");
-        setAlert({ visible: true, message: "This category already exists!", type: "danger" }); // Show error alert
-        proceed = false;
-      }
-    });
 
-    if (newCategory && proceed) {
-      try {
-        // const response = await fetch("https://excel-soft-nodejs.vercel.app/addtab", {
-        const response = await fetch("http://localhost:9000/addtab", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            category: newCategory,
-            quarter: document.getElementById("quarter").value,
-            epublic:false
-          }),
-        });
+    if (!newQuarter) {
+      setAlert({ visible: true, message: "Quarter cannot be empty.", type: "danger" });
+      return;
+    }
 
-        if (response.ok) {
-          setCategories([...categories, newCategory]);
-          setActiveCategory(newCategory);
-          setNewCategory("");
-          
-          setAlert({ visible: true, message: "Category added successfully!", type: "success" }); // Success alert
-          
-          if (document.getElementById("quarter").value !== activeQuarter) {
-            window.location.reload();
-          }
-        } else {
-          console.log("Something went wrong");
-        }
-      } catch (error) {
-        console.log("Error:", error);
-        setAlert({ visible: true, message: "Error adding category.", type: "danger" }); // Show error alert
-      }
+    if (quarters.includes(newQuarter)) {
+      setAlert({ visible: true, message: "Quarter already exists.", type: "danger" });
+      return;
+    }
+
+    try {
+      SetLoading(true);
+
+      // Add all default categories for the new quarter
+      await Promise.all(
+        defaultCategories.map((cat) =>
+          fetch("http://localhost:9000/addtab", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              category: cat,
+              quarter: newQuarter,
+              epublic: false,
+            }),
+          })
+        )
+      );
+
+      // Update states
+      setQuarters([newQuarter, ...quarters]);
+      setActiveQuarter(newQuarter);
+      setCategories(defaultCategories);
+      setActiveCategory(defaultCategories[0]);
+      setNewQuarter("");
+
+      setAlert({ visible: true, message: "New quarter and default categories added!", type: "success" });
+    } catch (error) {
+      console.error("Error adding new quarter:", error);
+      setAlert({ visible: true, message: "Failed to add new quarter.", type: "danger" });
+    } finally {
+      SetLoading(false);
     }
   };
 
@@ -104,27 +113,18 @@ const AdminButton = () => {
     setActiveQuarter(quarter);
   };
 
-
   return (
     <>
       {alert.visible && (
-        <Alert // for alert
+        <Alert
           text={alert.message}
           type={alert.type}
           onDismiss={() => setAlert({ visible: false, message: "", type: "" })}
         />
       )}
-      
-      <div
-        className="dropdown"
-        style={{
-          marginTop: "-24px",
-          float: "right",
-          marginRight: "12px",
-        }}
-      >
 
-        <button //dropdown for quarer
+      <div className="dropdown" style={{ marginTop: "-24px", float: "right", marginRight: "12px" }}>
+        <button
           className="btn btn-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
@@ -137,10 +137,8 @@ const AdminButton = () => {
             quarters.map((quarter, index) => (
               <li key={index}>
                 <a
-                  className={`dropdown-item ${
-                    activeQuarter === quarter ? "active" : ""
-                  }`}
-                  onClick={() => handleSelectQuarter(quarter)} // Handle click
+                  className={`dropdown-item ${activeQuarter === quarter ? "active" : ""}`}
+                  onClick={() => handleSelectQuarter(quarter)}
                   style={{ cursor: "pointer" }}
                 >
                   {quarter}
@@ -154,99 +152,59 @@ const AdminButton = () => {
           )}
         </ul>
       </div>
-      
-     {isAdmin&& <button
-        className="btn btn-warning"
-        style={{
-          marginTop: "8.1%",
-          position: "absolute",
-          left: "76%",
-          width: "9rem",
-          height: "2.5rem",
-        }}
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Add Tab ➕
-      </button>}
-      
-      <div
-        className="modal fade"
-        id="exampleModal"
-        tabIndex={-1}
-        aria-labelledby="exampleModalLabel"
-      >
+
+      {isAdmin && (
+        <button
+          className="btn btn-warning"
+          style={{ marginTop: "8.1%", position: "absolute", left: "73%", width: "11rem", height: "2.5rem" }}
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Add New Quarter ➕
+        </button>
+      )}
+
+      <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
         <div className="modal-dialog">
           <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Add new category for - {activeQuarter}
-              </h1>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form id="catadd" onSubmit={handleAddCategory}>
+            <form onSubmit={handleAddNewQuarter}>
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                  Add New Quarter
+                </h1>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+              </div>
+              <div className="modal-body">
                 <div className="mb-3">
-                  <label htmlFor="category-name" className="col-form-label">
-                    Quarter:
+                  <label htmlFor="new-quarter" className="col-form-label">
+                    New Quarter:
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    id="quarter"
-                    placeholder="Enter New Category Name"
+                    id="new-quarter"
+                    placeholder="e.g., 2025Q1"
+                    value={newQuarter}
+                    onChange={(e) => setNewQuarter(e.target.value)}
                     required
                   />
                 </div>
-
-                <div className="mb-3">
-                  <label htmlFor="category-name" className="col-form-label">
-                    Category:
-                  </label>
-                  <select
-                    className="form-select"
-                    aria-label="Default select example"
-                    id="category-name"
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                  >
-                    <option value="" disabled>
-                      Select Category
-                    </option>
-                    <option value="Most valuable Player">Most valuable Player</option>
-                    <option value="Extra Miler">Extra Miler</option>
-                    <option value="Excelearn">Excelearn</option>
-                    <option value="Pat on the back">Pat on the back</option>
-                  </select>
-                </div>
-              
-                <div className="modal-footer" style={{ height: "3rem" }}>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-primary"
-                    data-bs-dismiss="modal"
-                  >
-                    ADD
-                  </button>
-                </div>
-              </form>
-            </div>
+              </div>
+              <div className="modal-footer" style={{ height: "4rem" }}>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                  Close
+                </button>
+                <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">
+                  ADD
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      {loading && <Loader></Loader>}
+
+      {loading && <Loader />}
+
       <Header
         categories={categories}
         setCategories={setCategories}

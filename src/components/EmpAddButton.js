@@ -1,203 +1,121 @@
 import React, { useState } from 'react';
 import Alert from './Alert';
 import { useAuth } from "../context/Authcontext";
+import Papa from 'papaparse';
 const EmpAddButton = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
-  const { isAdmin, canPublish, isViewer } = useAuth();
-  const [employeeDetails, setEmployeeDetails] = useState({
-    empid: '',
-    name: '',
-    role: '',
-    photo: '',
-    remarks: '',
-    epublic: false
-  });
+  const { isAdmin} = useAuth();
+
 
   const handleAlert = (message, type) => {
     setAlert({ visible: true, message, type });
   };
 
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setEmployeeDetails((prevDetails) => ({ ...prevDetails, [id]: value }));
+   const handleCSVUpload = async(e) => {
+    const file = e.target.files[0];
+    props.SetLoading(true)
+    if (!file){
+       props.SetLoading(false)
+       return handleAlert("No file selected.", "danger");
+      }
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: async (results) => {
+        const employees = results.data;
+        console.log("total emps:"+ employees.length)
+        for (const emp of employees) {
+          const {
+            empid,
+            name,
+            role,
+            photo,
+            remarks,
+            category,
+            // quarter, (add it afterworad)
+            mail
+          } = emp;
+          console.log(emp)
+          try {
+            const response = await fetch('http://localhost:9000/add', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                empid: parseInt(empid),
+                name,
+                photo,
+                role,
+                mail,
+                remarks,
+                category,
+                quarter:props.activeQuarter,
+                epublic: false,
+              })
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to add employee.');
+            }
+
+            // Add to state (optional)
+            const newEmployee = {
+              empid: parseInt(empid),
+              name,
+              role,
+              photo,
+              mail,
+              remarks,
+              category,
+              quarter:props.activeQuarter,
+              epublic: false,
+            };
+
+            props.setEmployees((prev) => [...prev, newEmployee]);
+            props.refreshCategoryCount(category);
+            props.refreshPublishStatus();
+            
+          } catch (error) {
+            props.SetLoading(false)
+            console.error(`Error adding employee ${empid}:`, error);
+            handleAlert(`Error adding employee ${empid}`, 'danger');
+          }
+        }
+
+        props.SetLoading(false)
+        handleAlert('CSV Upload completed successfully!', 'success');
+        setTimeout(() => {
+  window.location.reload();
+}, 700);
+      },
+      error: (err) => {
+        props.SetLoading(false)
+        console.error('CSV Parse Error:', err);
+        handleAlert('Error parsing CSV file!', 'danger');
+      }
+    });
   };
 
-  const handleFetchBtn = async () => {
-    try {
-      if (!employeeDetails.empid) {
-        return handleAlert('Employee ID cannot be empty!', "danger");
-      }
-
-      // const response = await fetch(`https://excel-soft-nodejs.vercel.app/empID/${employeeDetails.empid}`);
-      const response = await fetch(`http://localhost:9000/empID/${employeeDetails.empid}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch employee data.');
-      }
-
-      const data = await response.json();
-      if (data.length === 0) {
-        return handleAlert('Employee not found!', "danger");
-      }
-
-      setEmployeeDetails({
-        empid: employeeDetails.empid,
-        name: data[0].name,
-        role: data[0].role,
-        photo: data[0].photo,
-        remarks: data[0].remarks,
-        epublic:employeeDetails.epublic
-      });
-    } catch (error) {
-      console.error('Error fetching employee:', error);
-      handleAlert('Error fetching employee data!', "danger");
-    }
-  };
-
-  const handleAddEmpBtn = async () => {
-    let { empid, name, role, photo, remarks, epublic } = employeeDetails;
-    empid = Number.parseInt(empid)
-    const { currtab, activeQuarter } = props;
-
-    if (!name || !role || !photo || !remarks) {
-      return handleAlert('All fields are required!', "danger");
-    }
-
-    try {
-      // const response = await fetch('https://excel-soft-nodejs.vercel.app/add', {
-      const response = await fetch('http://localhost:9000/add', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          empid,
-          name,
-          role,
-          photo,
-          category: currtab,
-          quarter: activeQuarter,
-          remarks,
-          epublic
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to add employee.');
-      }
-
-      const newEmployee = { empid, name, role, photo, remarks, category: currtab, quarter: activeQuarter, epublic: false };
-      props.setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
-      props.refreshCategoryCount(currtab);
-      props.refreshPublishStatus()
-      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '',epublic: false });
-      handleAlert('A new employee has been added!', 'success');
-    } catch (error) {
-      console.error('Error adding employee:', error);
-      handleAlert('Employee already exists or something went wrong!', 'danger');
-      setEmployeeDetails({ empid: '', name: '', role: '', photo: '', remarks: '',epublic: false });
-    }
-  };
 
   return (
     <>
       {alert.visible && <Alert text={alert.message} type={alert.type} onDismiss={() => setAlert({ visible: false, message: '', type: '' })} />}
-      {isAdmin&&<button
-        className="btn btn-success"
-        type="button"
-        style={{
-          marginTop:"-9%",marginLeft:"63.5%",marginTop:"-8.4%"
-        }}
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModalEmp"
-      >
-        Add Employee ➕
-      </button>}
+      {isAdmin&&
 
-      {/* Modal View */}
-      <div className="modal fade" id="exampleModalEmp" tabIndex="-1" aria-labelledby="exampleModalLabel" >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h1 className="modal-title fs-5" id="exampleModalLabel">
-                Add Employee for "{props.currtab}" - {props.activeQuarter}
-              </h1>
-              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div className="modal-body">
-              <div className="mb-3">
-                <label htmlFor="empid" className="col-form-label"
-               
-                >EMP ID:</label>
-                <div style={{display:"flex", gap:"10px"}}>
-                  <input
-                    type="number"
-                    className="form-control"
-                    id="empid"
-                    value={employeeDetails.empid}
-                    onChange={handleInputChange}
-                    placeholder='Ex:1000000001 (10 digit) '
-                    />
-                    <button className="btn btn-primary" onClick={handleFetchBtn}>
-                    Fetch
-                     </button>
-                  </div>
-              </div>
-                  <div className="underline" style={{
-                    borderBottom:"1.8px solid black"
-                  }}></div>
-              
-              <form id="newform">
-                <div className="mb-3">
-                  <label htmlFor="name" className="col-form-label">Name:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    value={employeeDetails.name}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="role" className="col-form-label">Role:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="role"
-                    value={employeeDetails.role}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="photo" className="col-form-label">Image URL:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="photo"
-                    value={employeeDetails.photo}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label htmlFor="remarks" className="col-form-label">Remarks:</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="remarks"
-                    value={employeeDetails.remarks}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                Close
-              </button>
-              <button type="button" className="btn btn-success" onClick={handleAddEmpBtn} data-bs-dismiss="modal">
-                ADD
-              </button>
-            </div>
-          </div>
+     <div style={{ marginTop:"-5%",marginLeft:"56.5%",}}>
+          <label className="btn btn-success">
+            📁 Upload Employee CSV
+            <input
+              type="file"
+              accept=".csv"
+              style={{ display: "none" }}
+              onChange={handleCSVUpload}
+            />
+          </label>
         </div>
-      </div>
+      }
+
+
     </>
   );
 };

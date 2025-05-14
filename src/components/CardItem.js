@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Alert from "./Alert";
-
+import { useAuth } from "../context/Authcontext";
 const CardItem = (props) => {
   const [currEmp, setCurrEmp] = useState(props.index || 0);
   const [alert, setAlert] = useState({ text: "", type: "" }); 
 
   const emparr = props.employees || [];
   const empdetails = emparr[currEmp];
+    const { isAdmin, canPublish, isViewer } = useAuth();
+
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -176,6 +178,7 @@ const CardItem = (props) => {
         className={`card border-3 border-${props.epublic?"success":"danger"}`}
         style={{ width: "16rem", marginBottom: "1rem", padding:"10px" }}
       >
+        
         <img
           src={props.image}
           className="card-img-top"
@@ -196,17 +199,17 @@ const CardItem = (props) => {
             maxWidth: "8rem",
           }}
         >
-          <button
+         {isAdmin&& <button
             className="btn btn-warning"
             onClick={handleEdit}
             data-bs-toggle="modal"
             data-bs-target="#exampleModalEditEmp"
           >
             Edit
-          </button>
-          <button className="btn btn-danger" onClick={handleDelete}>
+          </button>}
+          {isAdmin&&<button className="btn btn-danger" onClick={handleDelete}>
             Delete
-          </button>
+          </button>}
         </div>
       </div>
 
