@@ -73,7 +73,7 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
   Employee Achievements - {activeQuarter} {`${publishstatus ? "(Fully Published)" : "(Not Fully Published)"}`}
 </h1>
 <h2 className="container text-center">
-  LOGIN : {isAdmin ? "Admin" : canPublish ? "Publisher" : "Viewer"}
+  Access : {isAdmin ? "Admin" : canPublish ? "HR" : "Viewer"}
 </h2>
 
 

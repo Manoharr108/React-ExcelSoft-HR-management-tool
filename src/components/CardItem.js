@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Alert from "./Alert";
 import { useAuth } from "../context/Authcontext";
+import { getEmployeePhotoUrl, getDefaultPhotoUrl } from "./utils/photoUtils"
 const CardItem = (props) => {
   const [currEmp, setCurrEmp] = useState(props.index || 0);
   const [alert, setAlert] = useState({ text: "", type: "" }); 
@@ -90,16 +91,18 @@ const CardItem = (props) => {
       const data = await response.json();
       console.log(data)
       let name = document.getElementById("editname");
-      let photo = document.getElementById("editphoto");
+      // let photo = document.getElementById("editphoto");
       let role = document.getElementById("editrole");
+      let mail = document.getElementById("editemail");
       let id = document.getElementById("id");
       let remarks = document.getElementById("editremarks");
 
       id.value = data.empid;
       name.value = data.name;
-      photo.value = data.photo;
+      // photo.value = data.photo;
       role.value = data.role; 
       remarks.value = data.remarks; 
+      mail.value = data.mail; 
       
       props.SetLoading(false);
      
@@ -115,13 +118,13 @@ const CardItem = (props) => {
     let empid = document.getElementById("id").value;
     empid = Number.parseInt(empid);
     let name = document.getElementById("editname").value;
-    let photo = document.getElementById("editphoto").value;
+    // let photo = document.getElementById("editphoto").value;
     let role = document.getElementById("editrole").value;
     let remarks = document.getElementById("editremarks").value;
 
     const updatedEditForm = {
       name,
-      photo,
+      // photo,
       role,
       remarks,
     };
@@ -147,7 +150,7 @@ const CardItem = (props) => {
           return {
             ...emp, 
             name: updatedEditForm.name,
-            photo: updatedEditForm.photo,
+            // photo: updatedEditForm.photo,
             role: updatedEditForm.role,
             remarks: updatedEditForm.remarks,
           };
@@ -179,13 +182,14 @@ const CardItem = (props) => {
         style={{ width: "16rem", marginBottom: "1rem", padding:"10px" }}
       >
         
-        <img
-          src={props.image}
-          className="card-img-top"
-          alt="Card image"
-          data-bs-toggle="modal"
-          data-bs-target={`#imageModal-${props.value}`}
-        />
+       <img
+      src={getEmployeePhotoUrl(props.value)} // Use empid from props
+      onError={(e) => e.target.src = getDefaultPhotoUrl()}
+      className="card-img-top"
+      alt="Card image"
+      data-bs-toggle="modal"
+      data-bs-target={`#imageModal-${props.value}`}
+      />
         <div className="card-body">
           <h5 className="card-title">{props.name}</h5>
           <h6 className="card-title">{props.role}</h6>
@@ -243,7 +247,8 @@ const CardItem = (props) => {
                 <div className="col-md-6">
                   <div className="position-relative">
                     <img 
-                      src={empdetails.photo} 
+                      src={getEmployeePhotoUrl(empdetails.empid)}
+                      onError={(e) => e.target.src = getDefaultPhotoUrl()}
                       alt={empdetails.name}
                       className="img-fluid rounded shadow-sm w-100" 
                       style={{ 
@@ -354,6 +359,16 @@ const CardItem = (props) => {
                   />
                 </div>
                 <div className="mb-3">
+                  <label htmlFor="employee-email" className="col-form-label">
+                    Email:
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="editemail"
+                  />
+                </div>
+                {/* <div className="mb-3">
                   <label htmlFor="photo" className="col-form-label">
                     Image URL:
                   </label>
@@ -362,7 +377,7 @@ const CardItem = (props) => {
                     className="form-control"
                     id="editphoto"
                   />
-                </div>
+                </div> */}
                 <div className="mb-3">
                   <label htmlFor="remarks" className="col-form-label">
                     Remarks:

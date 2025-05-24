@@ -38,7 +38,7 @@ const Login = () => {
 
   return (
     <>
-      <h1 class="display-1 tex text-center">LOGIN for HR console</h1>
+      <h1 class="display-1 tex text-center">LOGIN for Incentive Management Console</h1>
       <div
         style={{
           display: "flex",

@@ -156,7 +156,7 @@ const AdminButton = () => {
       {isAdmin && (
         <button
           className="btn btn-warning"
-          style={{ marginTop: "8.1%", position: "absolute", left: "73%", width: "11rem", height: "2.5rem" }}
+          style={{ marginTop: "8.1%", position: "absolute", left: "73%", height: "2.5rem" }}
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
@@ -185,7 +185,7 @@ const AdminButton = () => {
                     id="new-quarter"
                     placeholder="e.g., 2025Q1"
                     value={newQuarter}
-                    onChange={(e) => setNewQuarter(e.target.value)}
+                    onChange={(e) => setNewQuarter(e.target.value.toUpperCase())}
                     required
                   />
                 </div>
