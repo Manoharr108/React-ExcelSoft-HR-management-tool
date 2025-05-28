@@ -4,7 +4,6 @@ import { useAuth } from "../context/Authcontext";
 import { getEmployeePhotoUrl, getDefaultPhotoUrl } from "./utils/photoUtils"
 const CardItem = (props) => {
   const [currEmp, setCurrEmp] = useState(props.index || 0);
-  const [alert, setAlert] = useState({ text: "", type: "" }); 
 
   const emparr = props.employees || [];
   const empdetails = emparr[currEmp];
@@ -50,132 +49,110 @@ const CardItem = (props) => {
     }
   };
 
-  const handleDelete = async () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${props.name}?`
+const handleDelete = async () => {
+  const confirmed = window.confirm(
+    `Are you sure you want to delete ${props.name}?`
+  );
+
+  if (!confirmed) return;
+
+  props.setEmployees((prevEmployees) =>
+    prevEmployees.filter((emp) => emp.empid !== props.value)
+  );
+
+  try {
+    const response = await fetch(
+      // `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
+      `http://localhost:9000/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
+      { method: "DELETE" }
     );
-  
-    if (!confirmed) return;
-  
-    props.setEmployees((prevEmployees) =>
-      prevEmployees.filter((emp) => emp.empid !== props.value)
+
+    if (!response.ok) {
+      props.handleAlert("Failed to delete employee!", "danger");
+      throw new Error(`Failed to delete employee. Status: ${response.status}`);
+    }
+
+    props.handleAlert(`Employee ID : ${props.value} deleted successfully!`, "success");
+    props.refreshCategoryCount(props.currtab);
+    props.refreshPublishStatus();
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    props.handleAlert("Failed to delete employee!", "danger");
+  }
+};
+
+
+
+const handleEdit = async () => {
+  props.SetLoading(true);
+  try {
+    const response = await fetch(
+      `http://localhost:9000/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
     );
-  
-    try {
-      const response = await fetch(
-        // `https://excel-soft-nodejs.vercel.app/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
-        `http://localhost:9000/delete/${props.value}/${props.currtab}/${props.activeQuarter}`,
-        { method: "DELETE" }
-        
-      );
-  
-      if (!response.ok) {
-        throw new Error(`Failed to delete employee. Status: ${response.status}`);
+    const data = await response.json();
+    let name = document.getElementById("editname");
+    let role = document.getElementById("editrole");
+    let mail = document.getElementById("editemail");
+    let id = document.getElementById("id");
+    let remarks = document.getElementById("editremarks");
+
+    id.value = data.empid;
+    name.value = data.name;
+    role.value = data.role; 
+    remarks.value = data.remarks; 
+    mail.value = data.mail; 
+    
+    props.SetLoading(false);
+  } catch (error) {
+    console.error("Error fetching employee data:", error);
+    props.SetLoading(false);
+    props.handleAlert("Failed to load employee data!", "danger");
+  }
+};
+
+
+const handleEditSubmit = async () => {
+  props.SetLoading(true);
+  let empid = Number.parseInt(document.getElementById("id").value);
+  let name = document.getElementById("editname").value;
+    let mail = document.getElementById("editemail").value;
+  let role = document.getElementById("editrole").value;
+  let remarks = document.getElementById("editremarks").value;
+
+  const updatedEditForm = { name, role, remarks, mail };
+
+  try {
+    const response = await fetch(
+      `http://localhost:9000/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedEditForm),
       }
-      props.refreshCategoryCount(props.currtab);
-      props.refreshPublishStatus()
-      setAlert({ text: "Employee deleted successfully!", type: "success" });
-    } catch (error) {
-      console.error("Error deleting employee:", error);
-      setAlert({ text: "Failed to delete employee!", type: "danger" });
+    );
+    if (!response.ok) {
+      throw new Error("Failed to update employee data");
     }
-  };
 
-  const handleEdit = async () => {
-    props.SetLoading(true);
-    try {
-      const response = await fetch(
-        // `https://excel-soft-nodejs.vercel.app/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
-        `http://localhost:9000/employee/${props.value}/${props.currcat}/${props.activeQuarter}`
-      );
-      const data = await response.json();
-      console.log(data)
-      let name = document.getElementById("editname");
-      // let photo = document.getElementById("editphoto");
-      let role = document.getElementById("editrole");
-      let mail = document.getElementById("editemail");
-      let id = document.getElementById("id");
-      let remarks = document.getElementById("editremarks");
+    const updatedEmployees = props.employees.map((emp) =>
+      emp.empid === empid
+        ? { ...emp, ...updatedEditForm }
+        : emp
+    );
 
-      id.value = data.empid;
-      name.value = data.name;
-      // photo.value = data.photo;
-      role.value = data.role; 
-      remarks.value = data.remarks; 
-      mail.value = data.mail; 
-      
-      props.SetLoading(false);
-     
-    } catch (error) {
-      console.error("Error fetching employee data:", error);
-      props.SetLoading(false);
-      setAlert({ text: "Failed to load employee data!", type: "danger" });
-    }
-  };
+    props.setEmployees(updatedEmployees);
+    props.SetLoading(false);
+    props.handleAlert(`Employee ID : ${empid} details updated successfully!`, "success");
+  } catch (error) {
+    console.error("Error updating employee data:", error);
+    props.SetLoading(false);
+    props.handleAlert("Failed to update employee details!", "danger");
+  }
+};
 
-  const handleEditSubmit = async () => {
-    props.SetLoading(true);
-    let empid = document.getElementById("id").value;
-    empid = Number.parseInt(empid);
-    let name = document.getElementById("editname").value;
-    // let photo = document.getElementById("editphoto").value;
-    let role = document.getElementById("editrole").value;
-    let remarks = document.getElementById("editremarks").value;
-
-    const updatedEditForm = {
-      name,
-      // photo,
-      role,
-      remarks,
-    };
-
-    try {
-      const response = await fetch(
-        `http://localhost:9000/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
-        // `https://excel-soft-nodejs.vercel.app/edit/${empid}/${props.currcat}/${props.activeQuarter}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedEditForm),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update employee data");
-      }
-
-      const updatedEmployees = props.employees.map((emp) => {
-        if (emp.empid === empid) {
-          return {
-            ...emp, 
-            name: updatedEditForm.name,
-            // photo: updatedEditForm.photo,
-            role: updatedEditForm.role,
-            remarks: updatedEditForm.remarks,
-          };
-        }
-        return emp; 
-      });
-
-      props.setEmployees(updatedEmployees);
-      props.SetLoading(false);
-      setAlert({ text: "Employee details updated successfully!", type: "success" });
-    } catch (error) {
-      console.error("Error updating employee data:", error);
-      props.SetLoading(false);
-      setAlert({ text: "Failed to update employee details!", type: "danger" });
-    }
-  };
 
   return (
     <>
-      <Alert
-        text={alert.text}
-        type={alert.type}
-        onDismiss={() => setAlert({ text: "", type: "" })}
-      />
-      
       {/* Card View */}
       <div
         className={`card border-3 border-${props.epublic?"success":"danger"}`}

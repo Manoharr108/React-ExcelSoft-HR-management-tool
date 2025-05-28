@@ -28,10 +28,17 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     setAlert({ visible: true, message, type });
     setTimeout(() => {
       setAlert({ visible: false, message: "", type: "" });
-    }, 3000);
+    }, 5000);
   };
 
   async function puclishbtn(){
+   const userInput = prompt(`Are you sure you want to publish and send a congratulation message to all selected employees?\n\nType "CONFIRM" to proceed:`);
+
+  if (userInput !== "CONFIRM") {
+    handleAlert("Action cancelled or incorrect confirmation input.", "danger");
+    return;
+  }
+
     try {
       SetLoading(true);
       const data = await fetch(`http://localhost:9000/publish/${activeQuarter}`, {
@@ -44,8 +51,9 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         return 
       }
       const res  = await data.json()
+      console.log(res)
       SetLoading(false);
-      handleAlert(`Successfully published employees for quarter ${activeQuarter} please wait!`, "success");
+      handleAlert(`Successfully published employees for quarter ${activeQuarter} \n Status: ${res.message} \n Emails to send: ${res.emailsToSend} and please wait!!`, "success");
       setTimeout(()=>{
         window.location.reload();
       },1000)
@@ -53,6 +61,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     } catch (error) {
       SetLoading(false);
       handleAlert(`Something went wrong`, "danger");
+    
     }
   }
 
@@ -168,6 +177,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
               activeQuarter={activeQuarter}
               currcat={currcat}
               refreshPublishStatus={refreshPublishStatus}
+              handleAlert={handleAlert}
             />
           ))
         ) : (

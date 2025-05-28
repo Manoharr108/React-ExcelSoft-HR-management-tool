@@ -26,7 +26,7 @@ const EmpAddButton = (props) => {
     skipEmptyLines: true,
     complete: async (results) => {
       const employees = results.data;
-      console.log("total emps:" + employees.length);
+      // console.log("total emps:" + employees.length);
       
       // Define required fields
       const requiredFields = ['empid', 'name', 'role', 'mail', 'category'];
@@ -100,7 +100,6 @@ const EmpAddButton = (props) => {
           empid,
           name,
           role,
-          photo,
           remarks,
           category,
           mail,
