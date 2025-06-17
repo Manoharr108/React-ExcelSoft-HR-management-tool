@@ -1,5 +1,6 @@
 const eoperation = require("../models/emplyoee");
 const aoperation = require("../models/achiever");
+const quicklinks = require("../models/quicklinks")
 const {sendMassEmails } = require('./emailservice')
 exports.AddEmplyoee =async(req, res)=>{
     let {empid, name, category, quarter,mail, remarks, role, photo, epublic}= req.body;
@@ -196,51 +197,48 @@ exports.DeleteTab = async(req,res)=>{
 
 
 exports.publishquarter = async (req, res) => {
- try {
+  try {
     const { activeQuarter } = req.params;
-    
-    // First, publish the employees
+    const { hrMessage } = req.body;
+
+    // 1. Publish employees
     const result = await aoperation.updateMany(
       { quarter: activeQuarter },
       { $set: { epublic: true } }
     );
 
-    // if (result.modifiedCount === 0) {
-    //   return res.status(400).json({
-    //     message: `No employees found to publish for quarter ${activeQuarter}.`
-    //   });
-    // }
+    // 2. Publish quick links (Make all epublic: true)
+    await quicklinks.updateMany({}, { $set: { "links.$[].epublic": true } });
 
-    // Fetch all employees who were just published with their personal emails
-    // Only get employees who have both name and personalEmail
+    // 3. Fetch published employees (Only those with valid emails and names)
     const publishedEmployees = await aoperation.find({
       quarter: activeQuarter,
       epublic: true,
-      name: { $exists: true, $ne: "" },           // Name exists and is not empty
-      mail: { $exists: true, $ne: "" },           // Email exists and is not empty
-      category: { $exists: true, $ne: "" }        // Category exists and is not empty
-    }).select('name mail category empid'); // Adjust field names as per your schema
+      name: { $exists: true, $ne: "" },
+      mail: { $exists: true, $ne: "" },
+      category: { $exists: true, $ne: "" }
+    }).select('name mail category empid');
 
     if (publishedEmployees.length === 0) {
       return res.status(200).json({
-        message: `Successfully published employees for quarter ${activeQuarter}, but no employees found for email notification.`
+        message: `Successfully published employees for quarter ${activeQuarter} and quick links, but no employees found for email notification.`
       });
     }
 
-    // Send emails in background (don't wait for completion)
-    // Using setTimeout to make it non-blocking
+    // 4. Send emails in background
     setTimeout(async () => {
       try {
         console.log(`Starting email notification process for ${publishedEmployees.length} employees`);
-        const emailResults = await sendMassEmails(publishedEmployees, activeQuarter);
+        const emailResults = await sendMassEmails(publishedEmployees, activeQuarter, hrMessage) ;
         console.log('Email notification results:', emailResults);
       } catch (emailError) {
         console.error('Error in email notification process:', emailError);
       }
     }, 100);
 
+    // 5. Final response
     return res.status(200).json({
-      message: `Successfully published ${result.modifiedCount} employees for quarter ${activeQuarter}. Email notifications are being sent.`,
+      message: `Successfully published ${result.modifiedCount} employees for quarter ${activeQuarter} and all quick links. Email notifications are being sent.`,
       publishedCount: result.modifiedCount,
       emailsToSend: publishedEmployees.length
     });
@@ -248,7 +246,7 @@ exports.publishquarter = async (req, res) => {
   } catch (error) {
     console.error('Error in publishquarter:', error);
     return res.status(500).json({ 
-      message: 'Server error while publishing employees.', 
+      message: 'Server error while publishing employees and quick links.', 
       error: error.message 
     });
   }

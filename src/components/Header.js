@@ -3,6 +3,8 @@ import Tab from './Tab';
 import Card from './Card';
 import DeleteTab from './DeleteTab';
 import { useAuth } from "../context/Authcontext";
+import QuickLinksMenu from './QuickLinksMenu';
+
 
 
 function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
@@ -75,10 +77,9 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
 <h2 className="container text-center">
   Access : {isAdmin ? "Admin" : canPublish ? "HR" : "Viewer"}
 </h2>
-
-
       
       <div className="tabcontainer" style={{display:"flex",margin:"25px"}}>
+
         <ul className="nav nav-tabs">
           {categories.map((category, index) => (
             <Tab
@@ -99,6 +100,22 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
           activeCategory = {activetab}
           activeQuarter = {activeQuarter}
         />
+        
+        <button 
+          className="btn btn-light border "
+          type="button"
+          data-bs-toggle="offcanvas"
+          data-bs-target="#quickLinksMenu"
+          aria-controls="quickLinksMenu"
+          style={{ width: '45px', height: '45px', marginLeft:"12px"}}
+        >
+          <i className="fas fa-bars" style={{ color: 'black', fontSize: '24px' }}></i>
+        </button>
+
+
+<QuickLinksMenu SetLoading={SetLoading} />
+
+        
 
       </div>
      

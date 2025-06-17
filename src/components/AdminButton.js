@@ -128,7 +128,6 @@ const AdminButton = () => {
           className="btn btn-secondary dropdown-toggle"
           type="button"
           data-bs-toggle="dropdown"
-          aria-expanded="false"
         >
           Select Quarter
         </button>
@@ -144,7 +143,7 @@ const AdminButton = () => {
                   {quarter}
                 </a>
               </li>
-            ))
+            ) )
           ) : (
             <li>
               <a className="dropdown-item">No quarters available</a>
@@ -156,7 +155,7 @@ const AdminButton = () => {
       {isAdmin && (
         <button
           className="btn btn-warning"
-          style={{ marginTop: "8.1%", position: "absolute", left: "73%", height: "2.5rem" }}
+          style={{ marginTop: "8.1%", position: "absolute", left: "71.3%", height: "2.5rem" }}
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >

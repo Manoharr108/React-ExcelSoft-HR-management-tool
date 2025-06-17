@@ -1,28 +1,30 @@
 import React, { useState, useEffect } from "react";
-import CardItem from "./CardItem";  
+import CardItem from "./CardItem";
 import EmpAddButton from "./EmpAddButton";
 import Alert from './Alert';
 import { useAuth } from "../context/Authcontext";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 
-
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
-  const [employees, setEmployees] = useState([]); 
+  const [employees, setEmployees] = useState([]);
   const [newEmployee, setNewemployee] = useState({
     empid: "",
     name: "",
     photo: "",
     category: "",
     quarter: "",
-    remarks: "", 
-    epublic:false
+    remarks: "",
+    epublic: false
   });
 
-  const { logout,  isAdmin, canPublish, isViewer } = useAuth();
+  const { logout, isAdmin, canPublish, isViewer } = useAuth();
 
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
 
+  // Modal States
+  const [showModal, setShowModal] = useState(false);
+  const [hrMessage, setHrMessage] = useState("");
 
   const handleAlert = (message, type) => {
     setAlert({ visible: true, message, type });
@@ -31,41 +33,44 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     }, 5000);
   };
 
-  async function puclishbtn(){
-   const userInput = prompt(`Are you sure you want to publish and send a congratulation message to all selected employees?\n\nType "CONFIRM" to proceed:`);
-
-  if (userInput !== "CONFIRM") {
-    handleAlert("Action cancelled or incorrect confirmation input.", "danger");
-    return;
+  function puclishbtn() {
+    setShowModal(true);
   }
 
+  async function handleConfirmPublish() {
     try {
       SetLoading(true);
       const data = await fetch(`http://localhost:9000/publish/${activeQuarter}`, {
-        method:"PUT"
-      })
-      
-      if(!data.ok){
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ hrMessage })
+      });
+
+      if (!data.ok) {
         SetLoading(false);
         handleAlert(`Something went wrong`, "danger");
-        return 
+        setShowModal(false);
+        return;
       }
-      const res  = await data.json()
-      console.log(res)
+
+      const res = await data.json();
+      console.log(res);
       SetLoading(false);
       handleAlert(`Successfully published employees for quarter ${activeQuarter} \n Status: ${res.message} \n Emails to send: ${res.emailsToSend} and please wait!!`, "success");
-      setTimeout(()=>{
+      setShowModal(false);
+      setTimeout(() => {
         window.location.reload();
-      },1000)
+      }, 1000);
 
     } catch (error) {
       SetLoading(false);
       handleAlert(`Something went wrong`, "danger");
-    
+      setShowModal(false);
     }
   }
 
-  //this is place for excel download
   const downloadAllEmployeesOfQuarter = async () => {
     try {
       SetLoading(true);
@@ -76,25 +81,25 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         return;
       }
       const data = await res.json();
-  
+
       if (!data || data.length === 0) {
         SetLoading(false);
         handleAlert("No employees found for the current quarter.", "danger");
         return;
       }
-  
+
       const sheetData = data
-      .filter(emp => emp.name && emp.name.trim() !== "" && emp.empid )
-      .map(emp => ({
-        EmpID: emp.empid,
-        Name: emp.name,
-        Role: emp.role,
-        Category: emp.category,
-        Quarter: emp.quarter,
-        Remarks: emp.remarks,
-        Published: emp.epublic ? "Yes" : "No"
-      }));
-    
+        .filter(emp => emp.name && emp.name.trim() !== "" && emp.empid)
+        .map(emp => ({
+          EmpID: emp.empid,
+          Name: emp.name,
+          Role: emp.role,
+          Category: emp.category,
+          Quarter: emp.quarter,
+          Remarks: emp.remarks,
+          Published: emp.epublic ? "Yes" : "No"
+        }));
+
       const worksheet = XLSX.utils.json_to_sheet(sheetData);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, `All_Employees_Q${activeQuarter}`);
@@ -108,12 +113,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
       console.error(error);
     }
   };
-  
-  
 
-
-
-  
   useEffect(() => {
     const fetching = async () => {
       try {
@@ -123,7 +123,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
 
         let filteredEmployees = await data.filter(emp => emp.quarter === activeQuarter && emp.name && emp.name.trim() !== "");
 
-        setEmployees(filteredEmployees); 
+        setEmployees(filteredEmployees);
         SetLoading(false);
       } catch (error) {
         console.log("Error fetching employees:", error);
@@ -131,11 +131,11 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
     };
     if (currcat) fetching();
   }, [currcat, activeQuarter]);
- 
+
   return (
     <>
-      {alert.visible && <Alert text={alert.message} type={alert.type} />} 
-      
+      {alert.visible && <Alert text={alert.message} type={alert.type} />}
+
       <EmpAddButton
         currtab={currcat}
         employees={employees}
@@ -146,15 +146,15 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         refreshPublishStatus={refreshPublishStatus}
         SetLoading={SetLoading}
       />
-      
+
       <div className="cardContainer" style={{
         display: "flex",
-        flexWrap: "wrap",   
-        gap: "10px",           
+        flexWrap: "wrap",
+        gap: "10px",
         justifyContent: "center",
-        alignItems: "center",   
+        alignItems: "center",
         margin: "0 auto",
-        marginTop: "79px",  
+        marginTop: "79px"
       }}>
 
         {employees.length > 0 ? (
@@ -166,8 +166,8 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
               index={index}
               name={employee.name}
               achievement={employee.achievement}
-              image={employee.photo }
-              role={employee.role }
+              image={employee.photo}
+              role={employee.role}
               value={employee.empid}
               remarks={employee.remarks || "No remarks available"}
               employees={employees}
@@ -185,16 +185,43 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         )}
       </div>
 
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+        <button type="button" className="btn btn-secondary btn-lg" onClick={downloadAllEmployeesOfQuarter}>Download (Excel copy all the employees of current quarter)</button>
+      </div>
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+        {canPublish && <button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>}
+      </div>
+      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+        <button type="button" className="btn btn-danger btn-lg" onClick={logout}>LOGOUT</button>
+      </div>
 
-      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
-      <button type="button" className="btn btn-secondary btn-lg" onClick={downloadAllEmployeesOfQuarter}>Download (Excel copy all the employees of current quarter)</button>
-      </div>
-      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
-     { canPublish &&<button type="button" className="btn btn-info btn-lg" onClick={puclishbtn}>PUBLISH</button>}
-      </div>
-      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
-      <button type="button" className="btn btn-danger btn-lg" onClick={logout}>LOGOUT</button>
-      </div>
+      {/* Modal */}
+      {showModal && (
+        <div className="modal show fade d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Add Optional HR Message</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <textarea
+                  className="form-control"
+                  rows="4"
+                  placeholder="Type your congratulatory message here (optional)..."
+                  value={hrMessage}
+                  onChange={(e) => setHrMessage(e.target.value)}
+                />
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" className="btn btn-primary" onClick={handleConfirmPublish}>Confirm & Publish</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 }

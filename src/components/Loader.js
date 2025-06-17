@@ -7,7 +7,7 @@ const Loader = () => {
    <div className="loadercontainer" style={{
     position:"fixed",
     width:"100%",
-    zIndex:1,
+    zIndex:999,
     display:"flex",
     alignItems:"center",
     justifyContent:"center",

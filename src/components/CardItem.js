@@ -156,7 +156,7 @@ const handleEditSubmit = async () => {
       {/* Card View */}
       <div
         className={`card border-3 border-${props.epublic?"success":"danger"}`}
-        style={{ width: "16rem", marginBottom: "1rem", padding:"10px" }}
+        style={{ width: "16rem", marginBottom: "1rem", padding:"10px", cursor:"pointer" }}
       >
         
        <img

@@ -22,7 +22,7 @@ const Alert = ({ text, type, onDismiss }) => {
         role="alert"
         style={{
           position: 'fixed',
-          zIndex: 10000,
+          zIndex: 999 ,
           right: '85px',
           top: '186px',
         }}
