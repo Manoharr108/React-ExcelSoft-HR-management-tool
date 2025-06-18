@@ -173,6 +173,39 @@ function QuickLinksMenu({SetLoading}) {
                 ></button>
             </div>
 
+            {/* Add New Group Section */}
+          <div className="card" style={{
+              border: '2px dashed #dee2e6',
+              backgroundColor: '#ffffff'
+          }}>
+              <div className="card-body text-center " style={{ padding: '30px'}}>
+                  <h6 className="text-muted mb-3">Create New Group</h6>
+                  <div className="row justify-content-center">
+                      <div className="col-md-6">
+                          <div className="input-group">
+                              <input
+                                  type="text"
+                                  value={newGroupName}
+                                  onChange={(e) => setNewGroupName(e.target.value)}
+                                  placeholder="Enter group name"
+                                  disabled={!isAdmin}
+                                  className="form-control"
+                                  style={{ fontSize: '0.9rem' }}
+                              />
+                              <button 
+                                  className="btn btn-success" 
+                                  onClick={addGroup}
+                                  disabled={!isAdmin}
+                                  style={{ fontSize: '0.9rem' }}
+                              >
+                                  Create Group
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
             <div className="offcanvas-body" style={{
                 backgroundColor: '#f8f9fa',
                 padding: '20px'
@@ -223,6 +256,7 @@ function QuickLinksMenu({SetLoading}) {
                         </div>
 
                         {/* Card Body */}
+                        
                         <div className="card-body" style={{ padding: '20px' }}>
                             {/* Links List */}
                             {group.links.map((link, idx) => (
@@ -235,12 +269,12 @@ function QuickLinksMenu({SetLoading}) {
                                         <div className="col-md-3">
                                             <div className="d-flex align-items-center mb-2">
                                                 <span style={{
-                                                    width: '8px',
-                                                    height: '8px',
-                                                    borderRadius: '50%',
-                                                    backgroundColor: link.epublic ? '#28a745' : '#dc3545',
-                                                    marginRight: '8px'
-                                                }}></span>
+                                                    // width: '8px',
+                                                    // height: '8px',
+                                                    // borderRadius: '50%',
+                                                    // backgroundColor: link.epublic ? '#28a745' : '#dc3545',
+                                                    // marginRight: '8px'
+                                                }}>{link.epublic?"✔️":"❓"}</span>
                                                 <a 
                                                     href={link.url} 
                                                     target="_blank" 
@@ -345,38 +379,7 @@ function QuickLinksMenu({SetLoading}) {
                     </div>
                 ))}
 
-                {/* Add New Group Section */}
-                <div className="card" style={{
-                    border: '2px dashed #dee2e6',
-                    backgroundColor: '#ffffff'
-                }}>
-                    <div className="card-body text-center" style={{ padding: '30px' }}>
-                        <h6 className="text-muted mb-3">Create New Group</h6>
-                        <div className="row justify-content-center">
-                            <div className="col-md-6">
-                                <div className="input-group">
-                                    <input
-                                        type="text"
-                                        value={newGroupName}
-                                        onChange={(e) => setNewGroupName(e.target.value)}
-                                        placeholder="Enter group name"
-                                        disabled={!isAdmin}
-                                        className="form-control"
-                                        style={{ fontSize: '0.9rem' }}
-                                    />
-                                    <button 
-                                        className="btn btn-success" 
-                                        onClick={addGroup}
-                                        disabled={!isAdmin}
-                                        style={{ fontSize: '0.9rem' }}
-                                    >
-                                        Create Group
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              
             </div>
 
             <style jsx>{`

@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
 
 mongoose
-  .connect(process.env.mongoDB)
+  .connect(process.env.MONGODB_URI)    ///URI for cloud and other 
   .then(() => {
     console.log("Successfully connected to DB!");
     app.listen(port, () => {
