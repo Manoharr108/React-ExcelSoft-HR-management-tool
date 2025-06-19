@@ -78,13 +78,21 @@ function HeaderLayout({
               className="form-select"
               style={{ minWidth: '150px' , cursor:"pointer"}}
               value={activeQuarter}
-              onChange={(e) => handleSelectQuarter(e.target.value)}
+              onChange={(e) => {
+    if (e.target.value === "more") {
+      window.location.href = "https://es-homepage.excelindia.com/es-homepage/";
+    } else {
+      handleSelectQuarter(e.target.value);
+    }
+  }}
             >
               {quarters.map((quarter, index) => (
                 <option key={index} value={quarter}>
                   {quarter}
                 </option>
-              ))}
+              ))
+              }
+              <option value="more">more</option>
             </select>
 
             <button
