@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Alert from "./Alert";
+import Delete from '../assets/del white.svg'
+import Edit from "../assets/edit white.svg"
 import { useAuth } from "../context/Authcontext";
 import { getEmployeePhotoUrl, getDefaultPhotoUrl } from "./utils/photoUtils"
 const CardItem = (props) => {
@@ -155,8 +157,9 @@ const handleEditSubmit = async () => {
     <>
       {/* Card View */}
       <div
-        className={`card border-3 border-${props.epublic?"success":"danger"}`}
-        style={{ width: "16rem", marginBottom: "1rem", padding:"10px", cursor:"pointer" }}
+        className={`card border-1 `}
+        // border-${props.epublic?"success":"danger"}
+        style={{ width: "16rem", marginBottom: "1rem", cursor:"pointer" }}
       >
         
        <img
@@ -168,28 +171,36 @@ const handleEditSubmit = async () => {
       data-bs-target={`#imageModal-${props.value}`}
       />
         <div className="card-body">
-          <h5 className="card-title">{props.name}</h5>
-          <h6 className="card-title">{props.role}</h6>
+          <h5 className="card-title" style={{marginBottom:"0", color:"#0f6cbd"}}>{props.name}</h5>
+          <small className="card-text mb-0">
+            <p style={{marginBottom:0}}>{props.role}</p>
+          </small>
         </div>
         <div
           className="btncontainer container"
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            maxWidth: "8rem",
+            justifyContent:"center",
+            alignItems:"center",
+            gap: "10px",
+            marginBottom:"10px"
           }}
         >
          {isAdmin&& <button
-            className="btn btn-warning"
+            className="btn btn-secondary"
             onClick={handleEdit}
             data-bs-toggle="modal"
             data-bs-target="#exampleModalEditEmp"
           >
-            Edit
+          <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+             <img src={Edit} alt="edit icon" style={{color:"black"}}/> <span>Edit</span> 
+          </div>
           </button>}
           {isAdmin&&<button className="btn btn-danger" onClick={handleDelete}>
-            Delete
+            <div style={{display:"flex", justifyContent:"center", alignItems:"center"}}>
+
+             <img src={Delete} alt="del icon" style={{color:"black"}}/> <span>Delete</span>
+            </div>
           </button>}
         </div>
       </div>

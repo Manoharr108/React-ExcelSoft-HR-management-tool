@@ -186,7 +186,7 @@ const EmpAddButton = (props) => {
       {alert.visible && <Alert text={alert.message} type={alert.type} onDismiss={() => setAlert({ visible: false, message: '', type: '' })} />}
       {isAdmin&&
 
-     <div style={{ marginTop:"-5%",marginLeft:"56.5%",}}>
+     <div style={{ marginTop:"4px",marginLeft:"50.1rem",display:"flex", justifyContent:'center', alignItems:"center", gap:'216px'}}>
           <label className="btn btn-success">
             📁 Upload Employee CSV
             <input
@@ -196,6 +196,9 @@ const EmpAddButton = (props) => {
               onChange={handleCSVUpload}
             />
           </label>
+
+           {/* Delete Button */}
+          {props.DeleteTabComponent}
         </div>
       }
 

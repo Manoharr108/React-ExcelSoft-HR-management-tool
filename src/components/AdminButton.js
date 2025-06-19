@@ -123,7 +123,7 @@ const AdminButton = () => {
         />
       )}
 
-      <div className="dropdown" style={{ marginTop: "-24px", float: "right", marginRight: "12px" }}>
+      {/* <div className="dropdown" style={{ marginTop: "-24px", float: "right", marginRight: "12px" }}>
         <button
           className="btn btn-secondary dropdown-toggle"
           type="button"
@@ -150,12 +150,12 @@ const AdminButton = () => {
             </li>
           )}
         </ul>
-      </div>
+      </div> */}
 
       {isAdmin && (
         <button
           className="btn btn-warning"
-          style={{ marginTop: "8.1%", position: "absolute", left: "71.3%", height: "2.5rem" }}
+          style={{ marginTop: "140px", position: "absolute", left: "66.4rem", height: "2.5rem" }}
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
@@ -210,6 +210,8 @@ const AdminButton = () => {
         activeCategory={activeCategory}
         activeQuarter={activeQuarter}
         SetLoading={SetLoading}
+        quarters={quarters}
+        handleSelectQuarter={handleSelectQuarter}
       />
     </>
   );

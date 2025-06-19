@@ -1,50 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import Tab from './Tab';
-import Card from './Card';
-import DeleteTab from './DeleteTab';
+import React, { useState, useEffect } from "react";
+import Card from "./Card";
 import { useAuth } from "../context/Authcontext";
-import QuickLinksMenu from './QuickLinksMenu';
+import HeaderLayout from "./HeaderLayout";
+import DeleteTab from "./DeleteTab";
 
-
-
-function Header({ categories, setCategories, activeCategory , activeQuarter, SetLoading}) {
+function Header({
+  categories,
+  setCategories,
+  activeCategory,
+  activeQuarter,
+  SetLoading,
+  quarters,
+  handleSelectQuarter,
+}) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
   const [categoryCounts, setCategoryCounts] = useState({});
-  const [publishstatus, Setpublishstatus] = useState(false)
-  const { logout,  isAdmin, canPublish, isViewer } = useAuth();
+  const [publishstatus, Setpublishstatus] = useState(false);
+  const { logout, isAdmin, canPublish, isViewer } = useAuth();
 
   const handleTabClick = (category) => {
     setActivetab(category);
   };
-  
+
   async function refreshPublishStatus() {
     try {
       let res = await fetch(`http://localhost:9000/achievers-employees`);
       let data = await res.json();
-      
-      const filtered = data.emp.filter(emp => emp.quarter === activeQuarter);
-      const isAllPublished = filtered.every(emp => emp.epublic === true);
+
+      const filtered = data.emp.filter((emp) => emp.quarter === activeQuarter);
+      const isAllPublished = filtered.every((emp) => emp.epublic === true);
       Setpublishstatus(isAllPublished);
     } catch (err) {
       console.error("Error refreshing publish status", err);
     }
   }
-  
-  
+
   async function countfunction(category) {
-    // let data = await fetch(`https://excel-soft-nodejs.vercel.app/tab/${category}/${activeQuarter}`);
-    let data = await fetch(`http://localhost:9000/tab/${category}/${activeQuarter}`);
+    let data = await fetch(
+      `http://localhost:9000/tab/${category}/${activeQuarter}`
+    );
     let response = await data.json();
     return response.length - 1;
   }
 
-  async function refreshCategoryCount(category){
+  async function refreshCategoryCount(category) {
     let count = await countfunction(category);
-    setCategoryCounts(prevcount=>({
-      ...prevcount, 
-      [category]:count
-    }))
-  } 
+    setCategoryCounts((prevcount) => ({
+      ...prevcount,
+      [category]: count,
+    }));
+  }
 
   useEffect(() => {
     async function fetchCounts() {
@@ -54,73 +59,44 @@ function Header({ categories, setCategories, activeCategory , activeQuarter, Set
         counts[category] = count;
       }
       setCategoryCounts(counts);
-      refreshPublishStatus()
+      refreshPublishStatus();
     }
     fetchCounts();
-    setActivetab(activeCategory); 
+    setActivetab(activeCategory);
   }, [activeCategory, categories]);
-
-
 
   return (
     <>
-      <h1
-  className="container"
-  style={{
-    textAlign: 'center',
-    marginTop: '3rem',
-    color: publishstatus ? 'green' : 'red' 
-  }}
->
-  Employee Achievements - {activeQuarter} {`${publishstatus ? "(Fully Published)" : "(Not Fully Published)"}`}
-</h1>
-<h2 className="container text-center">
-  Access : {isAdmin ? "Admin" : canPublish ? "HR" : "Viewer"}
-</h2>
-      
-      <div className="tabcontainer" style={{display:"flex",margin:"25px"}}>
+      <HeaderLayout
+        activeQuarter={activeQuarter}
+        handleSelectQuarter={handleSelectQuarter}
+        categories={categories}
+        activeTab={activetab}
+        setActiveTab={setActivetab}
+        categoryCounts={categoryCounts}
+        SetLoading={SetLoading}
+        quarters={quarters}
+        accessLabel={isAdmin ? "Admin" : canPublish ? "HR" : "Viewer"}
+        publishstatus={publishstatus}
+      />
 
-        <ul className="nav nav-tabs">
-          {categories.map((category, index) => (
-            <Tab
-              key={index}
-              name={category}
-              count={categoryCounts[category] || 0} 
-              onClick={() => handleTabClick(category)}
-              isActive={category === activetab}
-            />
-          ))}
-        </ul>
-
-        <DeleteTab 
-          value={activetab} 
-          categories={categories}
-          setCategories={setCategories} 
-          setActivetab={setActivetab}
-          activeCategory = {activetab}
-          activeQuarter = {activeQuarter}
-        />
-        
-        <button 
-          className="btn btn-light border "
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#quickLinksMenu"
-          aria-controls="quickLinksMenu"
-          style={{ width: '45px', height: '45px', marginLeft:"12px"}}
-        >
-          <i className="fas fa-bars" style={{ color: 'black', fontSize: '24px' }}></i>
-        </button>
-
-
-<QuickLinksMenu SetLoading={SetLoading} />
-
-        
-
-      </div>
-     
-
-      <Card currcat={activetab} activeQuarter={activeQuarter} SetLoading={SetLoading} refreshCategoryCount={refreshCategoryCount} refreshPublishStatus={refreshPublishStatus}></Card>
+      <Card
+        currcat={activetab}
+        activeQuarter={activeQuarter}
+        SetLoading={SetLoading}
+        refreshCategoryCount={refreshCategoryCount}
+        refreshPublishStatus={refreshPublishStatus}
+        DeleteTabComponent={
+          <DeleteTab
+            value={activetab}
+            categories={categories}
+            setCategories={setCategories}
+            setActivetab={setActivetab}
+            activeCategory={activetab}
+            activeQuarter={activeQuarter}
+          />
+        }
+      />
     </>
   );
 }

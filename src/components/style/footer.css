@@ -1,0 +1,314 @@
+/* Professional Glass Banner Styles */
+.glass-banner {
+  position: fixed; /* Fixed to bottom */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+  z-index: 999; /* Stays on top */
+}
+
+.glass-banner::before {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 32px;
+  gap: 24px;
+}
+
+.banner-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-items: center;
+  padding: 24px 32px;
+  gap: 24px;
+}
+
+.banner-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.banner-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.banner-icon i {
+  font-size: 24px;
+  color: white;
+}
+
+.banner-text {
+  color: white;
+}
+
+.banner-title {
+  margin: 0 0 4px 0;
+  font-size: 24px;
+  font-weight: 700;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.banner-subtitle {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Professional Glass Buttons */
+.glass-btn {
+  position: relative;
+  height: 44px;
+  min-width: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.glass-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.6s;
+}
+
+.glass-btn:hover::before {
+  left: 100%;
+}
+
+.glass-btn .btn-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-btn .btn-content i {
+  font-size: 16px;
+}
+body {
+  padding-bottom: 80px; /* Leave space for footer */
+}
+
+/* Button Variants */
+.primary-btn {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #10b981;
+}
+
+.primary-btn:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(16, 185, 129, 0.3) 100%);
+  border-color: rgba(34, 197, 94, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.secondary-btn {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(99, 102, 241, 0.2) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #3b82f6;
+}
+
+.secondary-btn:hover {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+  border-color: rgba(59, 130, 246, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.accent-btn {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  border-color: rgba(168, 85, 247, 0.3);
+  color: #a855f7;
+}
+
+.accent-btn:hover {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%);
+  border-color: rgba(168, 85, 247, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+
+.dropdown-btn {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.2) 0%, rgba(107, 114, 128, 0.2) 100%);
+  border-color: rgba(156, 163, 175, 0.3);
+  color: #9ca3af;
+  min-width: 44px;
+  padding: 0;
+}
+
+.dropdown-btn:hover {
+  background: linear-gradient(135deg, rgba(156, 163, 175, 0.3) 0%, rgba(107, 114, 128, 0.3) 100%);
+  border-color: rgba(156, 163, 175, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(156, 163, 175, 0.2);
+  color: #d1d5db;
+}
+
+/* Glass Dropdown */
+.glass-dropdown {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  padding: 8px;
+  margin-top: 8px;
+}
+
+.glass-dropdown .dropdown-item {
+  color: rgba(255, 255, 255, 0.8);
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.glass-dropdown .dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateX(4px);
+}
+
+.glass-dropdown .dropdown-divider {
+  border-color: rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+
+/* Click Animation */
+.glass-btn:active {
+  transform: scale(0.98);
+}
+
+/* Loading Animation for 1500ms */
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.glass-btn.loading {
+  animation: buttonPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1);
+  pointer-events: none;
+}
+
+.glass-btn.loading .btn-content {
+  opacity: 0.7;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .banner-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 24px;
+  }
+  
+  .banner-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  
+  .banner-title {
+    font-size: 20px;
+  }
+  
+  .glass-btn .btn-content span {
+    display: none;
+  }
+  
+  .glass-btn {
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-content {
+    padding: 16px 20px;
+  }
+  
+  .banner-info {
+    gap: 12px;
+  }
+  
+  .banner-icon {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .banner-icon i {
+    font-size: 20px;
+  }
+  
+  .banner-title {
+    font-size: 18px;
+  }
+  
+  .banner-subtitle {
+    font-size: 13px;
+  }
+  
+  .banner-actions {
+    gap: 8px;
+  }
+  
+  .glass-btn {
+    height: 40px;
+    min-width: 40px;
+  }
+}

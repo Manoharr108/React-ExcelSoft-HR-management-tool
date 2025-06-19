@@ -72,14 +72,12 @@ const DeleteTab = (props) => {
         />
       )}
       {isAdmin&&<button
-        className="btn btn-warning"
+        className="btn btn-warning diff"
         type="button"
         style={{
-          float: "right",
           width: "9rem",
           height: "2.5rem",
           textAlign: "center",
-          marginLeft: "auto",
         }}
         value={props.value}
         data-bs-toggle="modal"

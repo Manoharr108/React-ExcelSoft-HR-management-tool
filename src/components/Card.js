@@ -5,8 +5,9 @@ import Alert from './Alert';
 import { useAuth } from "../context/Authcontext";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import "./style/footer.css"
 
-function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus }) {
+function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus, DeleteTabComponent }) {
   const [employees, setEmployees] = useState([]);
   const [newEmployee, setNewemployee] = useState({
     empid: "",
@@ -21,7 +22,12 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
   const { logout, isAdmin, canPublish, isViewer } = useAuth();
 
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-
+const handleLogout = () => {
+  const confirmLogout = window.confirm("Are you sure you want to logout?");
+  if (confirmLogout) {
+    logout();
+  }
+};
   // Modal States
   const [showModal, setShowModal] = useState(false);
   const [hrMessage, setHrMessage] = useState("");
@@ -145,6 +151,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         refreshCategoryCount={refreshCategoryCount}
         refreshPublishStatus={refreshPublishStatus}
         SetLoading={SetLoading}
+         DeleteTabComponent={DeleteTabComponent}
       />
 
       <div className="cardContainer" style={{
@@ -185,7 +192,7 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
         )}
       </div>
 
-      <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
+      {/* <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
         <button type="button" className="btn btn-secondary btn-lg" onClick={downloadAllEmployeesOfQuarter}>Download (Excel copy all the employees of current quarter)</button>
       </div>
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
@@ -193,7 +200,49 @@ function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refres
       </div>
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
         <button type="button" className="btn btn-danger btn-lg" onClick={logout}>LOGOUT</button>
-      </div>
+      </div> */}
+
+        {/* // JSX Component */}
+<div className="glass-banner">
+  <div className="banner-content">
+    
+    <div className="banner-actions">
+      <button
+        type="button"
+        className="glass-btn primary-btn"
+       onClick={downloadAllEmployeesOfQuarter}>
+      
+        <div className="btn-content">
+          <i className="fas fa-cloud-download"></i>
+          <span>Download (Excel copy all the employees of current quarter)</span>
+        </div>
+      </button>
+
+      {canPublish&&<button
+        type="button"
+        className="glass-btn secondary-btn"
+        onClick={puclishbtn}>
+      
+        <div className="btn-content">
+          <i className="fas fa-cloud-upload"></i>
+          <span>PUBLISH</span>
+        </div>
+      </button>}
+
+      <button
+        type="button"
+        className="glass-btn accent-btn"
+       onClick={handleLogout}
+      >
+        <div className="btn-content">
+          <i className="fas fa-sign-out"></i>
+          <span>LOGOUT</span>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
 
       {/* Modal */}
       {showModal && (
