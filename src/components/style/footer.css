@@ -1,6 +1,6 @@
 /* Professional Glass Banner Styles */
 .glass-banner {
-  position: fixed; /* Fixed to bottom */
+  position: fixed; 
   bottom: 0;
   left: 0;
   width: 100%;
@@ -21,11 +21,12 @@
 
 .banner-content {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center; */
   align-items: center;
   padding: 24px 32px;
   gap: 24px;
+  float: right;
+  height: 4rem  ;
 }
 
 .banner-info {

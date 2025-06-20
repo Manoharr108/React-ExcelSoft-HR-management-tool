@@ -12,10 +12,10 @@ const EmpAddButton = (props) => {
     setAlert({ visible: true, message, type });
   };
 
-  const handleCSVUpload = async(e) => {
+const handleCSVUpload = async (e) => {
   const file = e.target.files[0];
   props.SetLoading(true);
-  
+
   if (!file) {
     props.SetLoading(false);
     return handleAlert("No file selected.", "danger");
@@ -26,43 +26,36 @@ const EmpAddButton = (props) => {
     skipEmptyLines: true,
     complete: async (results) => {
       const employees = results.data;
-      // console.log("total emps:" + employees.length);
-      
-      // Define required fields
-      const requiredFields = ['empid', 'name', 'role', 'mail', 'category'];
-      
-      // Validation arrays to track issues
+
+      // Updated field names
+      const requiredFields = ['Employee ID', 'Employee Name', 'Designation', 'Email ID', 'Award Highlight'];
+
       const validationErrors = [];
       const processedEmployees = [];
-      
-      // First pass: Validate all rows
+
       employees.forEach((emp, index) => {
-        const rowNumber = index + 2; // +2 because index starts at 0 and we skip header row
+        const rowNumber = index + 2;
         const missingFields = [];
         const invalidFields = [];
-        
-        // Check for missing required fields
+
         requiredFields.forEach(field => {
           const value = emp[field];
           if (!value || value.toString().trim() === '') {
             missingFields.push(field);
           }
         });
-        
-        // Additional specific validations
-        if (emp.empid && isNaN(parseInt(emp.empid))) {
-          invalidFields.push('empid (must be a number)');
+
+        if (emp['Employee ID'] && isNaN(parseInt(emp['Employee ID']))) {
+          invalidFields.push('Employee ID (must be a number)');
         }
-        
-        // Basic email validation
-        if (emp.mail && emp.mail.trim() !== '') {
+
+        if (emp['Email ID'] && emp['Email ID'].trim() !== '') {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(emp.mail.trim())) {
-            invalidFields.push('mail (invalid email format)');
+          if (!emailRegex.test(emp['Email ID'].trim())) {
+            invalidFields.push('Email ID (invalid email format)');
           }
         }
-        
-        // Collect errors for this row
+
         if (missingFields.length > 0 || invalidFields.length > 0) {
           let errorMsg = `Row ${rowNumber}:`;
           if (missingFields.length > 0) {
@@ -73,15 +66,13 @@ const EmpAddButton = (props) => {
           }
           validationErrors.push(errorMsg);
         } else {
-          // If validation passes, add to processed list
           processedEmployees.push({
             ...emp,
             rowNumber
           });
         }
       });
-      
-      // If there are validation errors, show them and stop processing
+
       if (validationErrors.length > 0) {
         props.SetLoading(false);
         const errorMessage = `CSV validation failed:\n${validationErrors.join('\n')}`;
@@ -89,23 +80,23 @@ const EmpAddButton = (props) => {
         handleAlert(`CSV validation failed. Please check the following issues:\n${validationErrors.slice(0, 5).join('\n')}${validationErrors.length > 5 ? `\n...and ${validationErrors.length - 5} more errors` : ''}`, 'danger');
         return;
       }
-      
-      // If validation passes, process all employees
+
       let successCount = 0;
       let failCount = 0;
       const processingErrors = [];
-      
+
       for (const empData of processedEmployees) {
         const {
-          empid,
-          name,
-          role,
-          remarks,
-          category,
-          mail,
           rowNumber
         } = empData;
-        
+
+        const empid = empData['Employee ID'];
+        const name = empData['Employee Name'];
+        const role = empData['Designation'];
+        const mail = empData['Email ID'];
+        const remarks = empData['Award Highlight'];
+        const category = empData['Award Type']; // Assuming 'Category' is still the same
+
         try {
           const response = await fetch('http://localhost:9000/add', {
             method: 'POST',
@@ -113,7 +104,6 @@ const EmpAddButton = (props) => {
             body: JSON.stringify({
               empid: parseInt(empid),
               name: name.trim(),
-              // photo: photo ? photo.trim() : '',
               role: role.trim(),
               mail: mail.trim(),
               remarks: remarks ? remarks.trim() : '',
@@ -128,12 +118,10 @@ const EmpAddButton = (props) => {
             throw new Error(`HTTP ${response.status}: ${errorText}`);
           }
 
-          // Add to state (optional)
           const newEmployee = {
             empid: parseInt(empid),
             name: name.trim(),
             role: role.trim(),
-            // photo: photo ? photo.trim() : '',
             mail: mail.trim(),
             remarks: remarks ? remarks.trim() : '',
             category: category.trim(),
@@ -154,8 +142,7 @@ const EmpAddButton = (props) => {
       }
 
       props.SetLoading(false);
-      
-      // Show final result
+
       if (failCount === 0) {
         handleAlert(`CSV Upload completed successfully! ${successCount} employees added.`, 'success');
         setTimeout(() => {
@@ -181,6 +168,7 @@ const EmpAddButton = (props) => {
 };
 
 
+
   return (
     <>
       {alert.visible && <Alert text={alert.message} type={alert.type} onDismiss={() => setAlert({ visible: false, message: '', type: '' })} />}
@@ -188,7 +176,7 @@ const EmpAddButton = (props) => {
 
      <div style={{ marginTop:"4px",marginLeft:"50.1rem",display:"flex", justifyContent:'center', alignItems:"center", gap:'216px'}}>
           <label className="btn btn-success">
-            📁 Upload Employee CSV
+            📁 Upload .CSV
             <input
               type="file"
               accept=".csv"

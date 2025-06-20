@@ -77,21 +77,22 @@ const AdminButton = () => {
       SetLoading(true);
 
       // Add all default categories for the new quarter
-      await Promise.all(
-        defaultCategories.map((cat) =>
-          fetch("http://localhost:9000/addtab", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              category: cat,
-              quarter: newQuarter,
-              epublic: false,
-            }),
-          })
-        )
-      );
+      
+      // await Promise.all(
+      //   defaultCategories.map((cat) =>
+      //     fetch("http://localhost:9000/addtab", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({
+      //         category: cat,
+      //         quarter: newQuarter,
+      //         epublic: false,
+      //       }),
+      //     })
+      //   )
+      // );
 
       // Update states
       setQuarters([newQuarter, ...quarters]);
@@ -155,7 +156,7 @@ const AdminButton = () => {
       {isAdmin && (
         <button
           className="btn btn-warning"
-          style={{ marginTop: "140px", position: "absolute", left: "66.4rem", height: "2.5rem" }}
+          style={{ marginTop: "140px", position: "absolute", left: "64.4rem", height: "2.5rem" }}
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
         >
@@ -212,6 +213,9 @@ const AdminButton = () => {
         SetLoading={SetLoading}
         quarters={quarters}
         handleSelectQuarter={handleSelectQuarter}
+        handleAddNewQuarter={handleAddNewQuarter}
+        newQuarter={newQuarter}
+        setNewQuarter={setNewQuarter}
       />
     </>
   );

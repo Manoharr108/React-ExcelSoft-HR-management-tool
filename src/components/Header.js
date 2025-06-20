@@ -12,6 +12,9 @@ function Header({
   SetLoading,
   quarters,
   handleSelectQuarter,
+  handleAddNewQuarter,
+  newQuarter,
+  setNewQuarter
 }) {
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
   const [categoryCounts, setCategoryCounts] = useState({});
@@ -40,7 +43,7 @@ function Header({
       `http://localhost:9000/tab/${category}/${activeQuarter}`
     );
     let response = await data.json();
-    return response.length - 1;
+    return response.length ;
   }
 
   async function refreshCategoryCount(category) {
@@ -78,6 +81,9 @@ function Header({
         quarters={quarters}
         accessLabel={isAdmin ? "Admin" : canPublish ? "HR" : "Viewer"}
         publishstatus={publishstatus}
+        handleAddNewQuarter={handleAddNewQuarter}
+        setNewQuarter={setNewQuarter}
+        newQuarter={newQuarter}
       />
 
       <Card

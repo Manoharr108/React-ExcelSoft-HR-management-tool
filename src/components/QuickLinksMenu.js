@@ -207,7 +207,7 @@ function QuickLinksMenu({SetLoading}) {
           </div>
           
             <div className="offcanvas-body" style={{
-                backgroundColor: '#f8f9fa',
+                backgroundColor: 'rgb(211 220 230)',
                 padding: '20px'
             }}>
                 {quickLinks.map((group, index) => (
