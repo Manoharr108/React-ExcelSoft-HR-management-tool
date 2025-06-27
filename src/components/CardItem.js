@@ -4,6 +4,7 @@ import Delete from '../assets/del white.svg'
 import Edit from "../assets/edit white.svg"
 import { useAuth } from "../context/Authcontext";
 import { getEmployeePhotoUrl, getDefaultPhotoUrl } from "./utils/photoUtils"
+
 const CardItem = (props) => {
   const [currEmp, setCurrEmp] = useState(props.index || 0);
 
@@ -115,7 +116,7 @@ const handleEdit = async () => {
 
 const handleEditSubmit = async () => {
   props.SetLoading(true);
-  let empid = Number.parseInt(document.getElementById("id").value);
+  let empid = document.getElementById("id").value;
   let name = document.getElementById("editname").value;
     let mail = document.getElementById("editemail").value;
   let role = document.getElementById("editrole").value;

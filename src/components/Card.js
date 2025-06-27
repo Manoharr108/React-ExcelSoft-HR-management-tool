@@ -5,6 +5,7 @@ import Alert from './Alert';
 import { useAuth } from "../context/Authcontext";
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import Remarks from "./Remarks";
 import "./style/footer.css"
 
 function Card({ currcat, activeQuarter, SetLoading, refreshCategoryCount, refreshPublishStatus, DeleteTabComponent }) {
@@ -97,10 +98,10 @@ const handleLogout = () => {
       const sheetData = data
         .filter(emp => emp.name && emp.name.trim() !== "" && emp.empid)
         .map(emp => ({
-          EmpID: emp.empid,
-          Name: emp.name,
-          Role: emp.role,
-          Category: emp.category,
+          EmployeeID: emp.empid,
+          EmployeeName: emp.name,
+          EmployeeDesignation: emp.role,
+          AwardType: emp.category,
           Quarter: emp.quarter,
           Remarks: emp.remarks,
           Published: emp.epublic ? "Yes" : "No"
@@ -141,7 +142,9 @@ const handleLogout = () => {
   return (
     <>
       {alert.visible && <Alert text={alert.message} type={alert.type} />}
-
+    
+     
+    
       <EmpAddButton
         currtab={currcat}
         employees={employees}
@@ -153,6 +156,8 @@ const handleLogout = () => {
         SetLoading={SetLoading}
          DeleteTabComponent={DeleteTabComponent}
       />
+   {/* <textarea name="ye" id="ye">write here</textarea> */}
+  
 
       <div className="cardContainer" style={{
         display: "flex",
@@ -161,7 +166,7 @@ const handleLogout = () => {
         justifyContent: "center",
         alignItems: "center",
         margin: "0 auto",
-        marginTop: "79px"
+        marginTop: "24px"
       }}>
 
         {employees.length > 0 ? (
@@ -201,7 +206,7 @@ const handleLogout = () => {
       <div className="publishbtn d-grid gap-2 col-6 mx-auto my-5">
         <button type="button" className="btn btn-danger btn-lg" onClick={logout}>LOGOUT</button>
       </div> */}
-
+ <Remarks quarter={activeQuarter} category={currcat} SetLoading={SetLoading} handleAlert={handleAlert}></Remarks>
         {/* // JSX Component */}
 <div className="glass-banner">
   <div className="banner-content">

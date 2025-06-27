@@ -54,7 +54,7 @@ const Dropdown = () => {
               <li key={index}>
                 <a
                   className={`dropdown-item ${quarter === activeQuarter ? 'active' : ''}`}
-                  href="#"
+                 
                   onClick={() => handleQuarterClick(quarter)}
                 >
                   {quarter}
@@ -63,7 +63,7 @@ const Dropdown = () => {
             ))
           ) : (
             <li>
-              <a className="dropdown-item" href="#">
+              <a className="dropdown-item">
                 No quarters available
               </a>
             </li>

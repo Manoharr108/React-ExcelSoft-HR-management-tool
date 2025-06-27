@@ -2,6 +2,7 @@ const express = require("express");
 const router = express();   
 const controller = require("../controllers/emplyoee-controller");
 const linkscontroller = require("../controllers/quicklinks")
+const remarkscontroller = require("../controllers/remarkscontroller")
 
 router.get("/employees",controller.AllEmployee);
 router.get("/achievers-employees",controller.AllAchieversEmployee);
@@ -32,5 +33,9 @@ router.delete("/deletegroup", linkscontroller.deleteGroup)
 router.delete("/deletelink", linkscontroller.deleteLink)
 router.put("/addlink", linkscontroller.addLinkToGroup)
 router.put("/editlink", linkscontroller.EditLink)
+
+//for remarks
+router.get("/getremarks/:quarter", remarkscontroller.GetRemarks)
+router.post("/remarks/addoredit", remarkscontroller.AddandEditRemarks)
 
 module.exports = router;

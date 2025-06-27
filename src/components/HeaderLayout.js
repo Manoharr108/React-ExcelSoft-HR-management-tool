@@ -18,7 +18,7 @@ function HeaderLayout({
   newQuarter,
   setNewQuarter
 }) {
-  const { isAdmin, canPublish } = useAuth();
+  const { isAdmin, canPublish, isViewer } = useAuth();
   const modalRef = useRef();
 
   // Function to programmatically open the modal
@@ -27,13 +27,27 @@ function HeaderLayout({
     modal.show();
   };
 
+  // Function to get user role and welcome message
+  const getUserRoleInfo = () => {
+    if (isAdmin) {
+      return { role: 'Admin', message: 'Welcome, Administrator! You have full system access.' };
+    } else if (canPublish) {
+      return { role: 'HR', message: 'Welcome, HR! You can manage and publish awards.' };
+    } else if (isViewer) {
+      return { role: 'Viewer', message: 'Welcome! You can view all published awards.' };
+    }
+    return { role: 'User', message: 'Welcome to Rewards and Recognition!' };
+  };
+
+  const { role, message } = getUserRoleInfo();
+
   return (
     <>
       <section className="navigation bg-rr1 bg-rr">
         <nav className="navbar navbar-dark">
           <div className="container-fluid justify-content-between">
             <div className="d-flex flex-column flex-md-row flex-wrap">
-              <a className="navbar-brand" href="#">
+              <a className="navbar-brand">
                 <img
                   src="/ES-White-logo.png"
                   width="auto"
@@ -52,8 +66,28 @@ function HeaderLayout({
                 </div>
               </div>
             </div>
+            
+            {/* Welcome Message */}
+            <div className="text-white text-end d-none d-md-block">
+              <div className="d-flex flex-column align-items-end">
+                <span className="badge bg-primary mb-1" style={{ fontSize: '1rem' }}>
+                  {role}
+                </span>
+                <small className="text-light opacity-75" style={{ fontSize: '0.85rem',textWrap:"wrap", width:"174px" }}>
+                  {message}
+                </small>
+              </div>
+            </div>
           </div>
         </nav>
+
+        {/* Mobile Welcome Message */}
+        <div className="container-fluid d-md-none">
+          <div className="alert alert-info alert-dismissible fade show mb-3" role="alert" style={{ fontSize: '0.85rem' }}>
+            <strong>{role}:</strong> {message}
+            <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        </div>
 
         <div className="container-fluid mt-3">
           <div className="row align-items-center justify-content-between">
@@ -70,62 +104,61 @@ function HeaderLayout({
                     <a className={`nav-link ${activeTab === category ? 'active' : ''}`} aria-current="page">
                       {category}
                       <span
-                        className={`position-absolute top-1 start-5 translate-middle badge rounded-pill bg-${categoryCounts[category] > 0 ? "primary" : "danger"}`}
-                        style={{ top: "90px", fontSize: ".8rem" }}
+                        className= {`position-absolute top-1 start-5 translate-middle badge rounded-pill bg-${categoryCounts[category] > 0 ? "primary" : "danger"}`}
+                        style={{ top: "99px", fontSize: ".8rem",  }}
                       >
                         {`${categoryCounts[category] || 0}`}
-                      </span>
-                    </a>
+                      </span></a> 
                   </li>
                 ))}
               </ul>
             </div>
-
+                
             {/* Dropdown + Hamburger */}
             <div className="col-12 col-md-3 d-flex justify-content-md-end align-items-center gap-2">
               <div className="btn-group">
-  <button
-    type="button"
-    className="btn btn-secondary dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-expanded="false"
-    style={{ minWidth: '150px', cursor: "pointer" }}
-  >
-    {activeQuarter}
-  </button>
-  <ul className="dropdown-menu">
-    {isAdmin&&<li>
-      <a className="dropdown-item" href="#" onClick={openModal}>
-        ➕ Add new quarter
-      </a>
-    </li>}
+                <button
+                  type="button"
+                  className="btn btn-secondary dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                  style={{ minWidth: '150px', cursor: "pointer" }}
+                >
+                  {activeQuarter}
+                </button>
+                <ul className="dropdown-menu">
+                  {isAdmin&&<li>
+                    <a className="dropdown-item" onClick={openModal}>
+                      ➕ Add new quarter
+                    </a>
+                  </li>}
 
-    <li><hr className="dropdown-divider" /></li>
+                  <li><hr className="dropdown-divider" /></li>
 
-    {quarters.map((quarter, index) => (
-      <li key={index}>
-        <a
-          className="dropdown-item"
-          onClick={() => handleSelectQuarter(quarter)}
-        >
-          {quarter}
-        </a>
-      </li>
-    ))}
+                  {quarters.map((quarter, index) => (
+                    <li key={index}>
+                      <a
+                        className="dropdown-item"
+                        onClick={() => handleSelectQuarter(quarter)}
+                        style={{cursor:"pointer"}}
+                      >
+                        {quarter}
+                      </a>
+                    </li>
+                  ))}
 
-    <li><hr className="dropdown-divider" /></li>
+                  <li><hr className="dropdown-divider" /></li>
 
-    <li>
-      <a
-        className="dropdown-item"
-        href="https://es-homepage.excelindia.com/es-homepage/"
-      >
-        more...
-      </a>
-    </li>
-  </ul>
-</div>
-
+                  <li>
+                    <a
+                      className="dropdown-item"
+                      href="https://es-homepage.excelindia.com/es-homepage/"
+                    >
+                      more...
+                    </a>
+                  </li>
+                </ul>
+              </div>
 
               <button
                 className="btn p-2 border-0"

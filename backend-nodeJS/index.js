@@ -11,7 +11,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
-// ✅ Serve the photos folder statically
 app.use('/photos', express.static(path.join(__dirname, 'photos')));
 
 mongoose

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const achivierSchema = mongoose.Schema(
 {
         empid:{
-            type:Number,
+            type:String,
             require:true,
             maxlength:10 
         },

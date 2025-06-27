@@ -153,7 +153,7 @@ const AdminButton = () => {
         </ul>
       </div> */}
 
-      {isAdmin && (
+      {/* {isAdmin && (
         <button
           className="btn btn-warning"
           style={{ marginTop: "140px", position: "absolute", left: "64.4rem", height: "2.5rem" }}
@@ -162,7 +162,7 @@ const AdminButton = () => {
         >
           Add New Quarter ➕
         </button>
-      )}
+      )} */}
 
       <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
         <div className="modal-dialog">

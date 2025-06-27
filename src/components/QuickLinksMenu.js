@@ -174,11 +174,11 @@ function QuickLinksMenu({SetLoading}) {
             </div>
 
             {/* Add New Group Section */}
-          <div className="card" style={{
+         {isAdmin&&  <div className="card" style={{
               border: '2px dashed #dee2e6',
               backgroundColor: '#ffffff'
           }}>
-              <div className="card-body text-center " style={{ padding: '30px'}}>
+             <div className="card-body text-center " style={{ padding: '30px'}}>
                   <h6 className="text-muted mb-3">Create New Group</h6>
                   <div className="row justify-content-center">
                       <div className="col-md-6">
@@ -204,7 +204,7 @@ function QuickLinksMenu({SetLoading}) {
                       </div>
                   </div>
               </div>
-          </div>
+          </div>}
           
             <div className="offcanvas-body" style={{
                 backgroundColor: 'rgb(211 220 230)',
@@ -307,7 +307,7 @@ function QuickLinksMenu({SetLoading}) {
                                                 }}
                                             />
                                         </div>
-                                        <div className="col-md-3">
+                                        {isAdmin&&<div className="col-md-3">
                                             <div className="d-flex gap-2">
                                                 <button 
                                                     className="btn btn-outline-primary btn-sm" 
@@ -326,13 +326,13 @@ function QuickLinksMenu({SetLoading}) {
                                                     Delete
                                                 </button>
                                             </div>
-                                        </div>
+                                        </div>}
                                     </div>
                                 </div>
                             ))}
 
                             {/* Add New Link Section */}
-                            <div className="border-top pt-3 mt-3">
+                            {isAdmin&&<div className="border-top pt-3 mt-3">
                                 <h6 className="text-muted mb-3" style={{ fontSize: '0.9rem' }}>Add New Link</h6>
                                 <div className="row">
                                     <div className="col-md-4">
@@ -374,7 +374,7 @@ function QuickLinksMenu({SetLoading}) {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div>}
                         </div>
                     </div>
                 ))}

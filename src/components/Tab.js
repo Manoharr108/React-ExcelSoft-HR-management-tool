@@ -9,7 +9,7 @@ const Tab = (props) => {
     >
       <a className={`nav-link ${props.isActive ? 'active' : ''}`} aria-current="page">
         {props.name}
-      <span className={`position-absolute top-1 start-5 translate-middle badge rounded-pill bg-${props.count>0?"primary":"danger"}`} style={{top:"165px", fontSize:".8rem"}}>
+      <span className={`position-absolute top-1 start-5 translate-middle badge rounded-pill bg-${props.count>0?"primary":"danger"}`} style={{top:"98px", fontSize:".8rem"}}>
           {`${props.count}`}
         </span>
       </a>

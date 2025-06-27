@@ -11,7 +11,7 @@ exports.AddEmplyoee =async(req, res)=>{
         // }
         const duplicateEntry = await aoperation.findOne({ empid, category, quarter });
         if (duplicateEntry) {
-            return res.status(409).json({ message: 'Employee already exists in the achievers list for this category and quarter.' });
+            return res.status(400).json({ message: 'Employee already exists in the achievers list for this category and quarter.' });
         }
         const newEmp = new aoperation({
             empid: empid,
