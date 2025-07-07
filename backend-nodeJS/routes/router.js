@@ -24,7 +24,8 @@ router.delete("/tab/:category/:quarter",controller.DeleteTab);
 
 router.put("/edit/:empid/:category/:quarter", controller.ModifyEmployee);
 
-router.put("/publish/:activeQuarter", controller.publishquarter)
+router.put("/publish/:activeQuarter", controller.publishquarter) //for all over publish (quick links + quarter)
+router.put("/qlinks-publish", controller.qlinksPublish) //this is only for qick links publish
 
 //this is for quicklinks
 router.get("/quicklinks", linkscontroller.GetAllQuickLinks)

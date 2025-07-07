@@ -164,12 +164,12 @@ const AdminButton = () => {
         </button>
       )} */}
 
-      <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
+      {/* <div className="modal fade" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel">
         <div className="modal-dialog">
           <div className="modal-content">
             <form onSubmit={handleAddNewQuarter}>
               <div className="modal-header">
-                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                <h1 className="modal-title fs-5" id="exampleModalLabel" >
                   Add New Quarter
                 </h1>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
@@ -183,7 +183,7 @@ const AdminButton = () => {
                     type="text"
                     className="form-control"
                     id="new-quarter"
-                    placeholder="e.g., 2025Q1"
+                    placeholder={`Next Quarter is ${activeQuarter+1}`}
                     value={newQuarter}
                     onChange={(e) => setNewQuarter(e.target.value.toUpperCase())}
                     required
@@ -201,7 +201,7 @@ const AdminButton = () => {
             </form>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {loading && <Loader />}
 

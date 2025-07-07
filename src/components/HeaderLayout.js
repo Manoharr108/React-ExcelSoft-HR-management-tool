@@ -30,11 +30,11 @@ function HeaderLayout({
   // Function to get user role and welcome message
   const getUserRoleInfo = () => {
     if (isAdmin) {
-      return { role: 'Admin', message: 'Welcome, Administrator! You have full system access.' };
+      return { role: 'Admin', message: 'Welcome, Administrator!' };
     } else if (canPublish) {
-      return { role: 'HR', message: 'Welcome, HR! You can manage and publish awards.' };
+      return { role: 'HR', message: 'Welcome, HR!' };
     } else if (isViewer) {
-      return { role: 'Viewer', message: 'Welcome! You can view all published awards.' };
+      return { role: 'Viewer', message: 'Welcome!' };
     }
     return { role: 'User', message: 'Welcome to Rewards and Recognition!' };
   };
@@ -127,7 +127,7 @@ function HeaderLayout({
                   {activeQuarter}
                 </button>
                 <ul className="dropdown-menu">
-                  {isAdmin&&<li>
+                  {isAdmin&&<li style={{cursor:"pointer"}}>
                     <a className="dropdown-item" onClick={openModal}>
                       ➕ Add new quarter
                     </a>
@@ -195,10 +195,11 @@ function HeaderLayout({
                     type="text"
                     className="form-control"
                     id="new-quarter"
-                    placeholder="e.g., 2025Q1"
+                   placeholder={`Last Quarter is ${activeQuarter}`}
                     value={newQuarter}
                     onChange={(e) => setNewQuarter(e.target.value.toUpperCase())}
                     required
+                    maxlength="6"
                   />
                 </div>
               </div>

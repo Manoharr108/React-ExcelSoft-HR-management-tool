@@ -5,7 +5,7 @@ const Remark = ({ quarter, category, handleAlert }) => {
   const [originalText, setOriginalText] = useState('');
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
-  const { isAdmin } = useAuth();
+  const { isAdmin, canPublish } = useAuth();
   // Fetch the current remark on mount
   useEffect(() => {
     const fetchRemark = async () => {
@@ -94,7 +94,7 @@ const Remark = ({ quarter, category, handleAlert }) => {
           marginBottom: '20px',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
         }}
-        disabled={!isAdmin||false}
+        disabled={!isAdmin}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder={`Remarks for: ${category} - ${quarter}`}

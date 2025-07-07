@@ -252,6 +252,14 @@ exports.publishquarter = async (req, res) => {
   }
 };
 
+exports.qlinksPublish = async (req, res)=>{
+    try {
+        await quicklinks.updateMany({}, { $set: { "links.$[].epublic": true } });
+        return res.status(200).json({message:"All links published!!"})
+    } catch (error) {
+        return res.status(500).json({message:"Something went wrong"})
+    }
+}
 
 
 exports.AllEmployeeWithQuarter = async (req, res) => {

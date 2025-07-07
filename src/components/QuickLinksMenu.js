@@ -148,6 +148,33 @@ function QuickLinksMenu({SetLoading}) {
         }
     }
 
+    async function qlinkspublish() {
+        if (!window.confirm("Are you sure you want to publish all Quick Links?")) return;
+
+        SetLoading(true);
+        try {
+            const res = await fetch('http://localhost:9000/qlinks-publish', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            if (res.ok) {
+              fetchQuickLinks()
+            } else {
+                throw new Error(data.message || "Failed to publish quick links.");
+            }
+        } catch (err) {
+            console.error("Error publishing quick links:", err);
+            setAlert({ visible: true, message: "Error publishing quick links.", type: "danger" });
+        } finally {
+            SetLoading(false);
+        }
+    }
+
+
     return (
         <div className="offcanvas offcanvas-end" tabIndex="-1" id="quickLinksMenu" aria-labelledby="quickLinksMenuLabel" style={{width:"45%"}}>
             <Alert alert={alert} setAlert={setAlert} />
@@ -378,6 +405,9 @@ function QuickLinksMenu({SetLoading}) {
                         </div>
                     </div>
                 ))}
+                {canPublish&&<button className='btn btn-primary'
+                style={{width:"100%"}}
+                 onClick={qlinkspublish}>Qlinks Publish</button>}
 
               
             </div>
