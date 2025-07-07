@@ -3,7 +3,7 @@ const aoperation = require("../models/achiever");
 const quicklinks = require("../models/quicklinks")
 const {sendMassEmails } = require('./emailservice')
 exports.AddEmplyoee =async(req, res)=>{
-    let {empid, name, category, quarter,mail, remarks, role, photo, epublic}= req.body;
+    let {empid, name, category, quarter,mail, remarks, role, epublic}= req.body;
     try{
         // let emp = await eoperation.findOne({empid});
         // if (!emp) {
@@ -16,7 +16,6 @@ exports.AddEmplyoee =async(req, res)=>{
         const newEmp = new aoperation({
             empid: empid,
             name: name,
-            photo: photo,
             role: role,
             mail:mail,
             remarks: remarks,

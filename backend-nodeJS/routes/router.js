@@ -3,6 +3,7 @@ const router = express();
 const controller = require("../controllers/emplyoee-controller");
 const linkscontroller = require("../controllers/quicklinks")
 const remarkscontroller = require("../controllers/remarkscontroller")
+const syncPhotosController = require("../controllers/sync-controller")
 
 router.get("/employees",controller.AllEmployee);
 router.get("/achievers-employees",controller.AllAchieversEmployee);
@@ -38,5 +39,8 @@ router.put("/editlink", linkscontroller.EditLink)
 //for remarks
 router.get("/getremarks/:quarter", remarkscontroller.GetRemarks)
 router.post("/remarks/addoredit", remarkscontroller.AddandEditRemarks)
+
+//sync photos
+router.post("/sync-photos", syncPhotosController.syncPhotos)
 
 module.exports = router;

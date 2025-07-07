@@ -7,104 +7,104 @@ const EmpAddButton = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: '', type: '' });
   const { isAdmin } = useAuth();
 
-  const handleCSVUpload = async (e) => {
-    const file = e.target.files[0];
-    props.SetLoading(true);
+const handleCSVUpload = async (e) => {
+  const file = e.target.files[0];
+  props.SetLoading(true);
 
-    if (!file) {
-      props.SetLoading(false);
-      return setAlert({ visible: true, message: "No file selected.", type: "danger" });
-    }
+  if (!file) {
+    props.SetLoading(false);
+    return setAlert({ visible: true, message: "No file selected.", type: "danger" });
+  }
 
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      transformHeader: h => h.trim(),
-      transform: value => value.trim(),
-      complete: async (results) => {
-        const employees = results.data;
+  // 🔄 Step 1: Sync photos
+  try {
+    const syncResponse = await fetch('http://localhost:9000/sync-photos', { method: 'POST' });
+    const syncResult = await syncResponse.json();
+    console.log('Photo sync result:', syncResult);
+  } catch (syncErr) {
+    props.SetLoading(false);
+    return setAlert({ visible: true, message: 'Failed to synchronize photos!', type: 'danger' });
+  }
 
-        const requiredFields = [
-          'Employee ID',
-          'Employee Name',
-          'Designation',
-          'Email ID',
-          'Award Type',
-          'Award Highlight'
-        ];
+  // 🔍 Step 2: Parse & validate CSV
+  Papa.parse(file, {
+    header: true,
+    skipEmptyLines: true,
+    transformHeader: h => h.trim(),
+    transform: value => value.trim(),
+    complete: async (results) => {
+      const employees = results.data;
+      const requiredFields = [
+        'Employee ID',
+        'Employee Name',
+        'Designation',
+        'Email ID',
+        'Award Type',
+        'Award Highlight'
+      ];
 
-        // Validate each employee record
-        const validationErrors = [];
-        
-        for (let i = 0; i < employees.length; i++) {
-          const emp = employees[i];
-          const rowNumber = i + 2; // +2 because of header row and 0-based index
-          
-          // Check for missing required fields
-          for (const field of requiredFields) {
-            const value = emp[field];
-            if (!value || value.toString().trim() === '') {
-              validationErrors.push(`Row ${rowNumber}: Missing ${field}`);
-            }
-          }
-          
-          // Validate Employee ID specifically
-          if (emp['Employee ID']) {
-            const empId = emp['Employee ID'].toString().trim();
-            if (empId.length !== 10) {
-              validationErrors.push(`Row ${rowNumber}: Employee ID must be exactly 10 characters long (current: ${empId.length})`);
-            } else if (!/^\d{10}$/.test(empId)) {
-              validationErrors.push(`Row ${rowNumber}: Employee ID must contain only digits`);
-            }
+      const validationErrors = [];
+
+      for (let i = 0; i < employees.length; i++) {
+        const emp = employees[i];
+        const rowNumber = i + 2;
+
+        // Check required fields
+        for (const field of requiredFields) {
+          const val = emp[field];
+          if (!val || val.trim() === '') {
+            validationErrors.push(`Row ${rowNumber}: Missing ${field}`);
           }
         }
 
-        // If there are validation errors, show them and stop processing
-        if (validationErrors.length > 0) {
-          props.SetLoading(false);
-          const errorMessage = validationErrors.length > 3 
-            ? `Found ${validationErrors.length} validation errors. First few: ${validationErrors.slice(0, 3).join('; ')}...`
-            : `Validation errors: ${validationErrors.join('; ')}`;
-          setAlert({ visible: true, message: errorMessage, type: "danger" });
-          console.error("CSV Validation Errors:", validationErrors);
-          return;
-        }
+        // Validate Employee ID format
+        const empid = emp['Employee ID']?.toString().trim();
+        if (empid) {
+          if (empid.length !== 10) {
+            validationErrors.push(`Row ${rowNumber}: Employee ID must be exactly 10 digits`);
+          } else if (!/^\d{10}$/.test(empid)) {
+            validationErrors.push(`Row ${rowNumber}: Employee ID must be numeric`);
+          }
 
-        // If validation passes, process the employees
-        let successCount = 0;
-        let failCount = 0;
-        const processingErrors = [];
-
-        for (const empData of employees) {
-          const empid = empData['Employee ID'].toString().trim();
-          const name = empData['Employee Name'].toString().trim();
-          const role = empData['Designation'].toString().trim();
-          const mail = empData['Email ID'].toString().trim();
-          const remarks = empData['Award Highlight'].toString().trim();
-          const category = empData['Award Type'].toString().trim();
-
+          // Check if photo exists (HEAD request)
           try {
-            const response = await fetch('http://localhost:9000/add', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                empid,
-                name,
-                role,
-                mail,
-                remarks,
-                category,
-                quarter: props.activeQuarter,
-                epublic: false,
-              })
-            });
-
-            if (!response.ok) {
-              const errorText = await response.text();
-              throw new Error(`HTTP ${response.status}: ${errorText}`);
+            const photoCheck = await fetch(`http://localhost:9000/photos/${empid}.png`, { method: 'HEAD' });
+            if (!photoCheck.ok) {
+              validationErrors.push(`Row ${rowNumber}: Photo missing for Employee ID ${empid}`);
             }
+          } catch {
+            validationErrors.push(`Row ${rowNumber}: Could not verify photo for Employee ID ${empid}`);
+          }
+        }
+      }
 
-            props.setEmployees((prev) => [...prev, {
+      if (validationErrors.length > 0) {
+        props.SetLoading(false);
+        const errorMessage = validationErrors.length > 3
+          ? `Validation failed with ${validationErrors.length} issues. First few: ${validationErrors.slice(0, 3).join('; ')}...`
+          : `Validation failed: ${validationErrors.join('; ')}`;
+        console.error("CSV Validation Errors:", validationErrors);
+        setAlert({ visible: true, message: errorMessage, type: "danger" });
+        return;
+      }
+
+      // ✅ If validation passes: Proceed to upload
+      let successCount = 0;
+      const processingErrors = [];
+
+      for (const empData of employees) {
+        const empid = empData['Employee ID'].trim();
+        const name = empData['Employee Name'].trim();
+        const role = empData['Designation'].trim();
+        const mail = empData['Email ID'].trim();
+        const remarks = empData['Award Highlight'].trim();
+        const category = empData['Award Type'].trim();
+
+        try {
+          const response = await fetch('http://localhost:9000/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
               empid,
               name,
               role,
@@ -113,41 +113,61 @@ const EmpAddButton = (props) => {
               category,
               quarter: props.activeQuarter,
               epublic: false,
-            }]);
+            })
+          });
 
-            props.refreshCategoryCount(category);
-            props.refreshPublishStatus();
-            successCount++;
-
-          } catch (error) {
-            failCount++;
-            console.error(`Error adding employee ${empid}:`, error);
-            processingErrors.push(`${empid}: ${error.message}`);
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
           }
-        }
 
-        props.SetLoading(false);
+          props.setEmployees(prev => [...prev, {
+            empid,
+            name,
+            role,
+            mail,
+            remarks,
+            category,
+            quarter: props.activeQuarter,
+            epublic: false,
+          }]);
 
-        // Show results
-        if (failCount === 0) {
-          setAlert({ visible: true, message: `${successCount} employees added successfully!`, type: "success" });
-          setTimeout(() => window.location.reload(), 700);
-        } else if (successCount > 0) {
-          setAlert({ visible: true, message: `Partial success: ${successCount} added, ${failCount} failed. Check console for errors.`, type: "warning" });
-          console.error("Processing errors:", processingErrors);
-          setTimeout(() => window.location.reload(), 1500);
-        } else {
-          setAlert({ visible: true, message: `Upload failed. All ${failCount} entries failed.`, type: "danger" });
-          console.error("All processing errors:", processingErrors);
+          props.refreshCategoryCount(category);
+          props.refreshPublishStatus();
+          successCount++;
+
+        } catch (error) {
+          console.error(`Error adding employee ${empid}:`, error);
+          processingErrors.push(`${empid}: ${error.message}`);
         }
-      },
-      error: (err) => {
-        props.SetLoading(false);
-        console.error('CSV Parse Error:', err);
-        setAlert({ visible: true, message: 'Error parsing CSV file! Please check the format.', type: 'danger' });
       }
-    });
-  };
+
+      props.SetLoading(false);
+
+      if (successCount === employees.length) {
+        setAlert({ visible: true, message: `${successCount} employees added successfully!`, type: "success" });
+        setTimeout(() => window.location.reload(), 700);
+      } else if (successCount > 0) {
+        setAlert({
+          visible: true,
+          message: `Partial success: ${successCount} added, ${employees.length - successCount} failed.`,
+          type: "warning"
+        });
+        console.error("Processing errors:", processingErrors);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setAlert({ visible: true, message: `Upload failed. No entries added.`, type: "danger" });
+        console.error("All processing errors:", processingErrors);
+      }
+    },
+    error: (err) => {
+      props.SetLoading(false);
+      console.error('CSV Parse Error:', err);
+      setAlert({ visible: true, message: 'Error parsing CSV file! Please check the format.', type: 'danger' });
+    }
+  });
+};
+
 
   return (
     <>
