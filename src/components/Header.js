@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Card from "./Card";
 import { useAuth } from "../context/Authcontext";
 import HeaderLayout from "./HeaderLayout";
@@ -19,17 +19,12 @@ function Header({
   const [activetab, setActivetab] = useState(activeCategory || categories[0]);
   const [categoryCounts, setCategoryCounts] = useState({});
   const [publishstatus, Setpublishstatus] = useState(false);
-  const { logout, isAdmin, canPublish, isViewer } = useAuth();
-
-  const handleTabClick = (category) => {
-    setActivetab(category);
-  };
+  const { isAdmin, canPublish } = useAuth();
 
   async function refreshPublishStatus() {
     try {
       let res = await fetch(`http://localhost:9000/achievers-employees`);
       let data = await res.json();
-
       const filtered = data.emp.filter((emp) => emp.quarter === activeQuarter);
       const isAllPublished = filtered.every((emp) => emp.epublic === true);
       Setpublishstatus(isAllPublished);

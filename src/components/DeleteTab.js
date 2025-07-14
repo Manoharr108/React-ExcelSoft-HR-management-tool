@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Alert from "./Alert";
 import { useAuth } from "../context/Authcontext";
 const DeleteTab = (props) => {
   const [alert, setAlert] = useState({ visible: false, message: "", type: "" });
-      const { isAdmin, canPublish, isViewer } = useAuth();
+  const { isAdmin } = useAuth();
 
   const handleDeleteBtn = async () => {
-    
     try {
       const response = await fetch(
         `http://localhost:9000/tab/${props.value}/${props.activeQuarter}`,
-        // `https://excel-soft-nodejs.vercel.app/tab/${props.value}/${props.activeQuarter}`,
         {
           method: "DELETE",
         }
@@ -53,7 +51,7 @@ const DeleteTab = (props) => {
       setAlert({
         visible: true,
         message: "An error occurred while deleting the tab.",
-        type: "error",
+        type: "danger",
       });
     }
   };
@@ -71,20 +69,22 @@ const DeleteTab = (props) => {
           onDismiss={handleAlertDismiss}
         />
       )}
-      {isAdmin&&<button
-        className="btn btn-warning diff"
-        type="button"
-        style={{
-          width: "9rem",
-          height: "2.5rem",
-          textAlign: "center",
-        }}
-        value={props.value}
-        data-bs-toggle="modal"
-        data-bs-target="#staticBackdrop"
-      >
-        Delete Tab ❌
-      </button>}
+      {isAdmin && (
+        <button
+          className="btn btn-warning diff"
+          type="button"
+          style={{
+            width: "9rem",
+            height: "2.5rem",
+            textAlign: "center",
+          }}
+          value={props.value}
+          data-bs-toggle="modal"
+          data-bs-target="#staticBackdrop"
+        >
+          Delete Tab ❌
+        </button>
+      )}
 
       {/* Modal View */}
       <div

@@ -43,4 +43,7 @@ router.post("/remarks/addoredit", remarkscontroller.AddandEditRemarks)
 //sync photos
 router.post("/sync-photos", syncPhotosController.syncPhotos)
 
+//email progress
+router.put("/email/getprogress/:quarter", controller.EmailProgress)
+
 module.exports = router;

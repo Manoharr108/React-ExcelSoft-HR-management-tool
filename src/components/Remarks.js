@@ -1,11 +1,11 @@
 import { useAuth } from "../context/Authcontext"; 
-import React, { useEffect, useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import Loader from "./Loader";
 const Remark = ({ quarter, category, handleAlert }) => {
   const [originalText, setOriginalText] = useState('');
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
-  const { isAdmin, canPublish } = useAuth();
+  const { isAdmin } = useAuth();
   // Fetch the current remark on mount
   useEffect(() => {
     const fetchRemark = async () => {
@@ -61,6 +61,7 @@ const Remark = ({ quarter, category, handleAlert }) => {
   const isChanged = text.trim() !== originalText.trim();
 
   return (
+      
     <div style={{ 
       padding: '32px', 
       margin: '0 auto', 
@@ -74,6 +75,7 @@ const Remark = ({ quarter, category, handleAlert }) => {
       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
       fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     }}>
+       {loading && <Loader />}
       <h6>Remarks for this Category:</h6>
       <textarea
         style={{
@@ -85,6 +87,7 @@ const Remark = ({ quarter, category, handleAlert }) => {
           fontSize: '14px',
           lineHeight: '1.5',
           fontFamily: 'inherit',
+          cursor: !isAdmin? 'not-allowed' : 'pointer',
           background: 'rgba(255, 255, 255, 0.9)',
           backdropFilter: 'blur(5px)',
           WebkitBackdropFilter: 'blur(5px)',

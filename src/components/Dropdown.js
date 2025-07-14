@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import AdminButton from './AdminButton';
 
 const Dropdown = () => {
   const [quarters, setQuarters] = useState([]);
@@ -8,7 +7,6 @@ const Dropdown = () => {
   useEffect(() => {
     async function fetchEmployees() {
       try {
-        // let response = await fetch('https://excel-soft-nodejs.vercel.app/employees'); 
         let response = await fetch('http://localhost:9000/employees'); 
         let employees = await response.json();
 

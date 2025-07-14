@@ -9,7 +9,7 @@ const Alert = ({ text, type, onDismiss }) => {
       const timeout = setTimeout(() => {
         setVisible(false);
         if (onDismiss) onDismiss();  
-      }, 3000);
+      }, 5000);
 
       return () => clearTimeout(timeout); 
     }
